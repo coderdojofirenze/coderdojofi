@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<style>
+			h1{
+				text-align			: center;
+				text-decoration	: underline;}
+			.centrato{
+				text-align			: center;}
+			.corsivo{
+				font-style			: italic;}
+			.nascosto{
+				display				: none;}
+			.domanda{
+				background-color	: yellow;
+				color					: blue;}
+			.sconfitta{
+				background-color	: black;
+				color					: white;
+				font-size			: larger;
+				text-align			: center;}
+			div{
+				margin				: 5% auto;
+				width				: 90%;}
+		</style>
+		<script>
+			var borsa;
+			function mostraDiv(d){
+				document.getElementById('inizio').style.display="none";
+				document.getElementById('fossato').style.display="none";
+				document.getElementById('chiave').style.display="none";
+				document.getElementById('spada').style.display="none";
+				document.getElementById('castello').style.display="none";
+				document.getElementById('porta').style.display="none";
+				document.getElementById('forziere').style.display="none";
+				document.getElementById('coperchio').style.display="none";
+				div=document.getElementById(d);
+				div.style.display="block";
+				if (borsa=='c'){
+					document.getElementById('chiave_si_no_01').innerHTML="In mano hai ancora la chiave che &egrave; costata la vita a un preziosissimo vaso.";
+					document.getElementById('chiave_si_no_02').style.display="inline";
+					document.getElementById('chiave_si_no_03').style.display="inline";
+					document.getElementById('chiave_si_no_04').style.display="none";
+				}else{
+					document.getElementById('chiave_si_no_01').innerHTML="Magari hai ragione.";
+					document.getElementById('chiave_si_no_02').style.display="none";
+					document.getElementById('chiave_si_no_03').style.display="inline";
+					document.getElementById('chiave_si_no_04').style.display="inline";
+				}
+			}	
+		</script>
+	</head>
+	<body onload="borsa='';mostraDiv('inizio');">
+		<h1>Gioco dei bivi</h1>
+		<div id="inizio" class="nascosto">
+				<h2>Davanti al ponte levatoio</h2>
+				<p>Ti trovi davanti a un castello che si dice contenga un prezioso tesoro.</p>
+				<p>Sembra un luogo molto pericoloso, ma il ponte levatoio &egrave; abbassato. Potrebbe essere una trappola?</p>
+				<p class="domanda">Cosa preferisci, entrare dalla porta principale o attraversare il fossato a nuoto?</p>
+				<input type="button" name="in_fossato" value="mi getto nel fossato pieno d'acqua" onclick="mostraDiv('fossato');" />
+				<input type="button" name="alla_porta" value="entro dalla porta principale" onclick="mostraDiv('castello');" />
+		</div>
+		<div id="fossato" class="nascosto">
+				<h2>Il fossato intorno al Castello</h2>
+				<p>Ehm...</p>
+				<p>C&rsquo;erano i coccodrilli...</p>
+				<p class="sconfitta">Che brutta fine! Mi dispiace.</p>
+				<input type="button" name="ricomincia" value="ricomincia" onclick="borsa=''; mostraDiv('inizio');" />
+		</div>
+		<div id="spada" class="nascosto">
+				<h2>La spada intarsiata</h2>
+				<p>Per afferrarla, devi arrampicarti su un mobile dall&rsquo;aspetto un po&rsquo; instabile. Ma ne vale decisamente la pena.</p>
+				<p>&Egrave; la pi&ugrave; bella spada che tu abbia mai visto: lucente come un raggio di luce e affilata come un rasoio.</p>
+				<p>Sei quasi riuscito ad afferrarla quando il mobile cede e senti che stai per cadere. Cerchi di afferrarti a qualcosa, e quel qualcosa &egrave; il manico della spada, che per&ograve; ti sfugge dalle dita&hellip;</p>
+				<p>Cadi a terra con la spada al seguito&hellip; Bella, bellissima, affilatissima. Cos&igrave; affilata che trafigge in un istante&hellip;</p>
+				<p class="sconfitta">Cio&egrave;, ti sei fatto fuori da solo!! Ma via!</p>
+				<input type="button" name="ricomincia" value="ricomincia" onclick="borsa=''; mostraDiv('inizio');" />
+		</div>	
+		<div id="chiave" class="nascosto">
+				<h2>Il vaso di cristallo</h2>
+				<p>Quello spettacolare vaso di cristallo sembra delicato come le ali di una farfalla: sei assolutamente certo che, se appena appena userai un po&rsquo; pi&ugrave; di forza del necessario, si romper&agrave;!</p>
+				<p>Fai un respiro profondo e lo sollevi con delicatezza estrema; lo rovesci e&hellip; <span class="corsivo">et voil&agrave;</span>: la chiave cade sul palmo della tua mano!</p>
+				<p>Ti tiri il vaso dietro le spalle.</p>
+				<p>Bene: c&rsquo;&egrave; ancora una spada appesa al muro e una porta che ti alletta.</p>
+				<p class="domanda">Cosa vuoi fare? Vuoi entrare nella &ldquo;Sala del tesoro&rdquo; o vuoi impossessarti della spada?</p>
+				<input type="button" name="alla_sala" value="entro nella sala!" onclick="mostraDiv('porta');" />
+				<input type="button" name="spada" value="afferro la spada" onclick="mostraDiv('spada');" />
+		</div>	
+		<div id="castello" class="nascosto">
+				<h2>Il Castello del gioco dei bivi</h2>
+				<p>Sei entrato nel castello.</p>
+				<p>C&rsquo;&egrave; un grande salone, arredato con fasto. Su una parete si trova una pesante porta con la scritta: &ldquo;Sala del tesoro&rdquo;.</p>
+				<p>Questa scritta ti fa molto pensare&hellip;</p>
+				<p>Invece, sul lato opposto noti, appesa al muro, una pesante spada dall&rsquo;elsa intagliata. Ti viene in mente che sei disarmato!</p>
+				<p>E l&igrave;, in un vaso di finissimo cristallo dalla forma esotica, intravedi in trasparenza una chiave dall&rsquo;aspetto misterioso. La prima cosa che pensi, per&ograve;, &egrave; che la tua mano potrebbe non entrare nella bocca del vaso. Per prendere la chiave potresti essere costretto a romperlo e questo ti dispiacerebbe molto&hellip;</p>
+				<p class="domanda">Cosa fai, ordunque? Entri nella &ldquo;Sala del tesoro&rdquo;, impugni la spada o cerchi di estrarre la chiave dal vaso?</p>
+				<input type="button" name="alla_sala" value="entro nella sala!" onclick="mostraDiv('porta');" />
+				<input type="button" name="spada" value="afferro la spada" onclick="mostraDiv('spada');" />
+				<input type="button" name="chiave" value="peccato per il vaso, ma mi serve la chiave" onclick="borsa='c'; mostraDiv('chiave');" id="chiave_si_no_04" />
+		</div>	
+		<div id="porta" class="nascosto">
+				<h2>La &ldquo;Sala del tesoro&rdquo;</h2>
+				<p>La porta si apre cigolando&hellip; Il rumore sembra dover risvegliare tutti i demoni dell&rsquo;inferno e ti fa battere il cuore in gola</p>
+				<p>Avanzi circospetto. Proprio in mezzo alla sala si presenta un pesante forziere di legno.</p>
+				<p><span class="corsivo">&Egrave; troppo facile!</span>, pensi. <span class="corsivo">&Egrave; tutto troppo facile!</span></p>
+				<p id="chiave_si_no_01">***QUESTA RIGA NON DEVE COMPARIRE***</p>
+				<p>Cerchi eventuali trappole, ma non riesci a trovarne nessuna. Rimani l&igrave; a fissare il forziere, indeciso su cosa fare.</p>
+				<p class="corsivo">S&igrave;, ma noi non &egrave; che abbiamo tutto il giorno! Forza, datti una mossa.</p>
+				<p class="domanda">Provi ad aprire il forziere? Rinunci e esci da l&igrave;?<span class="nascosto" id="chiave_si_no_02"> Usi la chiave che hai?</span></p>
+				<input type="button" name="forziere" value="apro il forziere" onclick="mostraDiv('coperchio');" />
+				<input type="button" name="castello" value="torno indietro" onclick="mostraDiv('castello');" />
+				<input type="button" name="serratura" value="uso la chiave" onclick="mostraDiv('forziere');" class="nascosto" id="chiave_si_no_03" />
+		</div>	
+		<div id="forziere" class="nascosto">
+				<h2>Il forziere nella &ldquo;Sala del tesoro&rdquo;</h2>
+				<p>Ti fai coraggio e ti inginocchi davanti al forziere. Dai un&rsquo;ultima occhiata intorno e&hellip; provi ad aprire il pesante coperchio.</p>
+				<p>Il coperchio si solleva e ti rivela&hellip; il motivo per cui sei qui!</p>
+				<p>La cosa pi&ugrave; preziosa che potevi sperare di conquistare: il diploma di ninja del CoderDojo Firenze!</p>
+				<p class="domanda centrato">Adesso puoi giocare un&rsquo;altra volta!</p>
+				<input type="button" name="ricomincia" value="ricomincia" onclick="borsa='';mostraDiv('inizio');" />
+		</div>
+		<div id="coperchio" class="nascosto">
+				<h2>Il forziere nella &ldquo;Sala del tesoro&rdquo;</h2>
+				<p>Ti fai coraggio e ti inginocchi davanti al forziere. Dai un&rsquo;ultima occhiata intorno e&hellip; provi ad aprire il pesante coperchio.</p>
+				<p>Immediatamente una risata inonda la sala.</p>
+				<p class="sconfitta">Un attimo dopo senti una forza misteriosa che ti afferra e ti riporta&hellip;</p>
+				<p class="sconfitta">&hellip;all&rsquo;inizio del gioco! :-)</p>
+				<input type="button" name="ricomincia" value="ricomincia" onclick="borsa='';mostraDiv('inizio');" />
+		</div>
+	</body>
+</html>

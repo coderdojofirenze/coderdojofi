@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<script language="javascript">
+		function mostraDiv(d){
+			document.getElementById('inizio').style.display="none";
+			document.getElementById('fossato').style.display="none";
+			document.getElementById('castello').style.display="none";
+			div=document.getElementById(d);
+			div.style.display="inline";
+		}	
+		</script>
+	</head>
+	<body onload="mostraDiv('inizio');">
+		<div id="inizio" style="display:none">
+			sei davanti al castello che fai?<br/>
+			<input type="button" value="buttati nel fossato" onclick="mostraDiv('fossato')">
+			<input type="button" value="entra nel castello" onclick="mostraDiv('castello')">
+		</div>	
+		<div id="fossato" style="display:none">
+			sei affogato<br/>
+			<input type="button" value="ricomincia" onclick="mostraDiv('inizio')">
+		</div>	
+		<div id="castello" style="display:none">
+			hai vinto<br/>
+			<input type="button" value="ricomincia" onclick="mostraDiv('inizio')">
+		</div>	
+	</body>
+</html>

@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<script language="javascript">
+		var borsa;
+		function mostraDiv(d){
+			document.getElementById('inizio').style.display="none";
+			document.getElementById('fossato').style.display="none";
+			document.getElementById('chiave').style.display="none";
+			document.getElementById('spada').style.display="none";
+			document.getElementById('castello').style.display="none";
+			document.getElementById('porta').style.display="none";
+			document.getElementById('forziere').style.display="none";
+			div=document.getElementById(d);
+			div.style.display="inline";
+			if (borsa=='c'){
+	                	document.getElementById('info').innerHTML="Puoi provare ad aprirlo con la chiave";
+	                	document.getElementById('btnapri').style.display="inline";
+	                	document.getElementById('btnchiave').style.display="none";
+			}else{
+	                	document.getElementById('info').innerHTML="Non hai la chiave per aprirlo";
+	                	document.getElementById('btnapri').style.display="none";
+	                	document.getElementById('btnchiave').style.display="inline";
+			}
+		}	
+		</script>
+	</head>
+	<body onload="borsa='';mostraDiv('inizio');">
+		<div id="inizio" style="display:none">
+			sei davanti al castello che fai?<br/>
+			<input type="button" value="buttati nel fossato" onclick="mostraDiv('fossato')">
+			<input type="button" value="entra nel castello" onclick="mostraDiv('castello')">
+		</div>	
+		<div id="fossato" style="display:none">
+			sei affogato<br/>
+			<input type="button" value="ricomincia" onclick="borsa='';mostraDiv('inizio')">
+		</div>	
+		<div id="spada" style="display:none">
+			La spada &egrave; pesante e tagliente, ti casca addosso e ti uccide<br/>
+			<input type="button" value="ricomincia" onclick="borsa='';mostraDiv('inizio')">
+		</div>	
+		<div id="chiave" style="display:none">
+			Hai preso la chiave. C'&egrave; una spada, in fondo alla sala c'&egrave; una porta.
+			Che fai?<br/>
+			<input type="button" value="prendo la spada" onclick="mostraDiv('spada')">
+			<input type="button" value="apro la porta" onclick="mostraDiv('porta')">
+		</div>	
+		<div id="castello" style="display:none">
+			sei entrato nel castello. Ci sono una spada e una chiave. In fondo alla sala c'&egrave; una porta.
+			Che fai?<br/>
+			<input type="button" value="prendo la spada" onclick="mostraDiv('spada')">
+			<input type="button" id="btnchiave" value="prendo la chiave" onclick="borsa='c';mostraDiv('chiave')">
+			<input type="button" value="apro la porta" onclick="mostraDiv('porta')">
+		</div>	
+		<div id="porta" style="display:none">
+			Se in una stanza con un forziere.<span id='info'></span><br/>
+			<input type="button" value="torna indietro" onclick="mostraDiv('castello')">
+			<input type="button" id="btnapri" style="display:none" value="apri il forziere" onclick="mostraDiv('forziere')">
+		</div>	
+		<div id="forziere" style="display:none">
+			Bravo hai trovato il tesoro.<br/>
+			<input type="button" value="ricomincia" onclick="borsa='';mostraDiv('inizio')">
+		</div>	
+	</body>
+</html>
