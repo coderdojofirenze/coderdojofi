@@ -17,4 +17,4 @@ I linguaggi utilizzati dal CD di Firenze sono primariamente i seguenti:
 * Processing
 * OpenScad
 
-La creazione di questo repository è un _work in progress_, per cui non contiente tutto il materiale prodotto e alcuni dei linguaggi sopra riportati potrebbero non essere presente. Per informazioni addizionali contattare il CD di Firenze.
+La creazione di questo repository è un _work in progress_, per cui non contiente tutto il materiale prodotto e alcuni dei linguaggi sopra riportati potrebbero non essere presenti. Per informazioni contattare il CD di Firenze.
