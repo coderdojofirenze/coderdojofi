@@ -1,0 +1,82 @@
+<html>
+<head>
+	<script>
+		var alto=128; 
+		var sinistra=128;
+		var alto2=128; 
+		var sinistra2=128;
+		var direz=Math.random()*6.28;
+		var punteggio=0;
+		var endgame=0;
+		var alterna=0;	
+	    window.addEventListener("keypress", function(event) { press(event); }, false);
+		window.setInterval(function(){
+			if (endgame==0){
+				direz+=Math.random() * 0.7-0.35;
+				sinistra2+=Math.cos(direz) *4;
+				alto2-=Math.sin(direz)*4;
+				if (sinistra2<0 || sinistra2>224 || alto2< 0 || alto2 > 224) direz+=3.14/2; 
+				sinistra2 = (sinistra2<0 ? 0:sinistra2);
+				sinistra2 = (sinistra2>224 ? 224:sinistra2);
+				alto2 = (alto2<0 ? 0:alto2);
+				alto2 = (alto2>224 ? 224:alto2);
+				document.getElementById("palla2").style.left=sinistra2.toString()+'px';			
+				document.getElementById("palla2").style.top=alto2.toString()+'px';
+				if (alterna==0){
+					document.getElementById("palla2").style.backgroundImage='url("palla5.png")';
+					alterna=1;
+				}else{
+					document.getElementById("palla2").style.backgroundImage='url("palla6.png")';
+					alterna=0;
+				}
+			}
+		},80);
+		window.setInterval(function(){
+			if (endgame==0){
+				endgame=1;
+				alert('Game Over');
+			}
+		},30000);
+
+		function press(e){
+			if (endgame==0){
+				var eventReference = (typeof e !== "undefined")? e : event;
+				var keyCode = eventReference.keyCode;
+				step=4;
+				switch (keyCode){
+					case 37: //sinistra
+							sinistra-=step;
+							sinistra = (sinistra<0 ? 0:sinistra);
+						break;
+					case 38: //alto
+							alto-=step;
+							alto = (alto<0 ? 0:alto);
+						break;
+					case 39: //destra
+							sinistra+=step;
+							sinistra = (sinistra>224 ? 224:sinistra);
+						break;
+					case 40: //basso
+							alto+=step;
+							alto = (alto>224 ? 224:alto);
+						break;
+				}
+				if (((alto-alto2)*(alto-alto2)+(sinistra-sinistra2)*(sinistra-sinistra2))<16){
+					punteggio++;
+					document.getElementById("punteggio").innerHTML=punteggio;
+					alto=0;
+					sinistra=0;
+				}
+				document.getElementById("palla").style.left=sinistra.toString()+'px';			
+				document.getElementById("palla").style.top=alto.toString()+'px';
+			}
+		}
+	</script>
+</head>
+<body onLoad="ciao();">
+<div  id="campodigioco" style="height:256;width:256;border:solid 1px black">
+	<div id="palla" style="background-image:url('palla.png');position:absolute;top:128px;left:128px;width:32px;height:32px;"></div>
+	<div id="palla2" style="background-image:url('palla.png');position:absolute;top:128px;left:128px;width:32px;height:32px;"></div>
+</div>
+Punteggio:<label id="punteggio">0</label>
+</body></html>

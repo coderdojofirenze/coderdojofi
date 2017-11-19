@@ -1,0 +1,40 @@
+<html>
+<head>
+	<script>
+	    window.addEventListener("keypress", function(event) { press(event); }, false);
+		var alto=128; 
+		var sinistra=128;
+		
+		function press(e){
+			var eventReference = (typeof e !== "undefined")? e : event;
+			var keyCode = eventReference.keyCode;
+			step=4;
+			switch (keyCode){
+				case 37: //sinistra
+						sinistra-=step;
+						sinistra = (sinistra<0 ? 0:sinistra);
+					break;
+				case 38: //alto
+						alto-=step;
+						alto = (alto<0 ? 0:alto);
+					break;
+				case 39: //destra
+						sinistra+=step;
+						sinistra = (sinistra>224 ? 224:sinistra);
+					break;
+				case 40: //basso
+						alto+=step;
+						alto = (alto>224 ? 224:alto);
+					break;
+			}
+			document.getElementById("palla").style.left=sinistra.toString()+'px';			
+			document.getElementById("palla").style.top=alto.toString()+'px';
+
+		}
+	</script>
+</head>
+<body onLoad="ciao();">
+<div  id="campodigioco" style="height:256;width:256;border:solid 1px black">
+	<img src="palla.png" id="palla" style="position:relative;top:128px;left:128px"/>
+</div>
+</body></html>

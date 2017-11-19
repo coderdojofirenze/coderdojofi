@@ -1,0 +1,41 @@
+Come ho pensato lo sviluppo dell'esempio.
+
+Il file base crea una palla o meglio un cerchio blu su sfondo nero.
+	Cambiando il valore di color alla riga 23 si cambia il colore della palla
+
+Passo 1)
+	Commento riga 23 e aggiungo la prima riga di step1
+			-->	var material = new THREE.MeshPhongMaterial();
+	Tutto nero, manca una luce
+	Aggiungo a riga 28 una luce, la seconda riga di step1
+			-->	canvas3d.addLight();
+	Ricompare un cerchio (bianco grigio), il colore si può cambiare passando il valore numerico in addLight es: 0xc2 è blu, 0xc20000 è rosso.
+		In partenza è stato usato un materiale base che ha un colore, adesso usiamo un materiale riflettente, quindi serve una luce per vederlo.
+	L'impressione è ancora piatta, aggiungiamo un faretto per creare l'effetto 3D con luci e ombre.
+	Aggiungo a riga 29 un faretto, la terza riga di step1
+			-->	canvas3d.addSpot(0xaf9f8f, 0.3);
+		Il primo parametro è il colore, il secondo l'intensità.
+		Notate che il faretto sta ruotando intorno alla sfera.
+
+Passo 2)
+	Diamo l'aspetto della terra alla sfera.
+	Aggiungo a riga 25 la texture della terra, la prima riga di step2
+			-->	material.map = THREE.ImageUtils.loadTexture('img/earthmap1k.jpg', undefined, canvas3d.getRender());
+		Cambiando la riga 20 ovvero aggiungendo il parametro {ctrl: true}, passiamo dalla rotazione automatica a quella manuale.
+		Trascinando (btn sinistro) il mouse la terra ruota, con la rotella si fa lo zoom.
+	Aggiungo a riga 26 e 27 la rugosità, la seconda e terza riga di step2
+			-->	material.bumpMap = THREE.ImageUtils.loadTexture('img/earthbump1k.jpg', undefined, canvas3d.getRender());
+			-->	material.bumpScale = 0.6;
+		Il parametro bumpScale dà la proporzione di rugosità definita nella texture.
+	Aggiungo a riga 28 e 29 l'effetto specchio, la quarta e quinta riga di step2
+			-->	material.specularMap = THREE.ImageUtils.loadTexture('img/earthspec1k.jpg', undefined, canvas3d.getRender());
+			-->	material.specular  = new THREE.Color('grey');
+
+
+Nello step alternative ho messo alcune modifiche
+	oltre al già citato controllo manuale, e ai giochi con i colori
+	Cambiando la gemetria, dalla sfera al toro ...
+	Cambiando le texture o cambiando pianeta (le mappe sono prese da http://planetpixelemporium.com/earth.html)
+	
+Step aggiuntivo.
+	Date delle posizioni GPS il comando addPositions le mostra sulla sfera

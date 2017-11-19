@@ -1,0 +1,56 @@
+<html>
+	<!-- Il Mio Blog (elementi di HTML, CSS) - Margherita Di Vaia - Coder Dojo Firenze 31/05/2014 -->
+	<head>
+		<title>Il mio Blog</title>
+		<style>
+			body{
+				font-family:Arial, Helvetica;
+				background-image:url('personcina.png');
+			}
+			.cellamenu{
+				background-color:#D4E6CA;
+				height:50px;
+				width:25%;
+				text-align:center;
+				cursor:pointer;
+			}
+			.cellamenuselezionata{
+				background-color:#99FF66;
+				height:50px;
+				width:25%;
+				text-align:center;
+				cursor:pointer;
+			}
+	</style>
+	</head>
+	<body onload="SelezionaPagina(document.getElementById('home'));">
+		<table id="menu" align="center" style="border:0;width:800px;">
+			</tr>
+				<td id="home" class="cellamenu"><a href="index.html">Home</a></td>
+				<td id="chisono" class="cellamenu" ><a href="chisono.html">Chi Sono</a></td>
+				<td id="cosapiace" class="cellamenuselezionata">Cosa mi piace</td>
+				<td id="cosafaro" class="cellamenu" ><a href="cosafaro.html">Cosa far&ograve; da grande</a></td>
+			<tr>
+		</table>
+		<table id="corpo" align="center" style="border:1px solid #000000;width:800px;background-color:#D4E6CA;height:600px;">
+			<tr id="corpocosapiace">
+				<td>
+					<p>Queste sono le cose che mi piacciono:</p>
+					<ul>
+						<li>leggere</li>					
+						<li>programmare</li>					
+						<li>mangiare</li>					
+						<li>nuotare</li>					
+					</ul>
+					<p>e poi mi piace questo video:</p>
+					<iframe width="420" height="315" src="http://www.youtube.com/embed/OXrU2ECBH-E?rel=0" frameborder="0" allowfullscreen></iframe>
+				</td>
+			</tr>
+		</table>
+		<table id="piedipagina" align="center" style="border:0;width:800px;">
+			</tr>
+				<td style="text-align:center;border-top:1px solid red;width:100%;font-weight:bold;font-size:12px;background-color:#FFFFFF;">MDV Copyleft 2014</td>
+			<tr>
+		</table>
+	</body>
+</html>

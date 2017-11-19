@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<script language="javascript">
+		var r,g,b,c;
+		function calcolaCodice(){
+			return '#'+ ('0'+r.toString(16)).slice(-2)+('0'+g.toString(16)).slice(-2)+('0'+b.toString(16)).slice(-2);
+		}
+		function colora(id){
+			c=calcolaCodice();
+			div=document.getElementById(id);
+			div.style.backgroundColor=c;
+			mostrargb();
+		}
+		function mostrargb(){
+			document.getElementById('rosso').innerHTML=r.toString()+' '+r.toString(16);
+			document.getElementById('verde').innerHTML=g.toString()+' '+g.toString(16);
+			document.getElementById('blu').innerHTML=b.toString()+' '+b.toString(16);
+			document.getElementById('codice').innerHTML=c;
+		}
+		function inizia(){
+			r=0;g=0;b=0;
+		}
+		function varia(x,v){
+			x=x+v;
+			if (x>255) return 255;
+			if (x<0) return 0;
+			return x;
+		}
+		</script>
+	</head>
+	<body onload="inizia();colora('colore');">
+		<input type="button" value="aumenta R" onclick="r=varia(r,1);colora('colore');">
+		<input type="button" value="diminuisci R" onclick="r=varia(r,-1);colora('colore');">
+		Rosso: <label id='rosso'></label><br/>
+		<input type="button" value="aumenta G" onclick="g=varia(g,1);colora('colore');">
+		<input type="button" value="diminuisci G" onclick="g=varia(g,-1);colora('colore');">
+		Verde: <label id='verde'></label><br/>
+		<input type="button" value="aumenta B" onclick="b=varia(b,1);colora('colore');">
+		<input type="button" value="diminuisci B" onclick="b=varia(b,-1);colora('colore');">
+		Blu: <label id='blu'></label><br/>
+		<label id='codice'></label><br/>
+		<div style="height:100px; width:100px" id="colore"></div>
+	</body>
+</html>

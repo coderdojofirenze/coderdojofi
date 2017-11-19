@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Ninja Snake</title>
+	</head>
+	<body>
+		<center>
+			<h1>Ninja Snake</h1>
+			<p id="punteggio">Score: </p>
+			<p id="record">Record: </p>
+			<br/>
+			<canvas id="campo" width="480" height="480"></canvas>
+		</center>
+		<script type="text/javascript">
+
+var app = function () {
+	//Canvas inizializzazione
+	var canvas = document.getElementById('campo'),
+		ctx = canvas.getContext("2d"),
+	// larghezza campo
+		w = canvas.width,
+	// altezza campo
+		h = canvas.height,
+	// dimensione della cella (un quadratino)
+		cella = 10,
+	// direzione del serpente
+		direzione,
+	// punteggio raggiunto
+		punteggio,
+		punteggioTag = document.getElementById('punteggio'),
+		record = 0,
+		recordTag = document.getElementById('record'),
+	// il timer del gioco
+		game_loop,
+	// variabile oggetto che rappresenta il cibo
+		cibo = {},
+	// Vettore dei quadratini che compongono il serpente
+		ombra,
+		il_serpente = [];
+
+	// Qui creiamo il serpente
+	function crea_snake() {
+		// Numero di quadratini che compongono il serpente
+		var length = 5;
+		// Svuotiamo il vecchio serpente
+		il_serpente = [];
+		// Qui creiamo il serpente, 5 celle orizzontali
+		for (var i=0; i<length; i++) {
+			il_serpente.unshift({x: i, y:0, color: 'lightgreen', bordo: 'green'});
+		}
+	}
+
+	// Qui creiamo il cibo
+	function crea_cibo () {
+		// Questo oggetto rappresenta la posizione x/y del cibo
+		// fra tutte le celle del campo da gioco, proprio come su una scacchiera
+		cibo = {
+			x: Math.round(Math.random() * (w - cella) / cella),
+			y: Math.round(Math.random() * (h - cella) / cella),
+			color: 'brown',
+			bordo: 'red'
+		};
+	}
+
+	// prepariamo il gioco
+	function init() {
+		// direzione iniziale
+		direzione = "right";
+		// creiamo un nuovo serpente
+		crea_snake();
+		// creiamo il cibo
+		crea_cibo();
+		// azzeriamo il punteggio
+		punteggio = 0;
+		punteggioTag.innerHTML = "Score: 0";
+		// Facciamo muovere il serpente
+		// Creiamo un timer che chiama la funzione scena ogni 60 ms (circa 16 volte ogni secondo)
+		if (typeof game_loop != "undefined")
+			clearInterval(game_loop);
+		game_loop = setInterval(scena, 100);
+	}
+
+	// Qui disegniamo un quadratino nella scacchiera
+	function disegna_cella(o)
+	{
+		ctx.fillStyle = o.color;
+		ctx.fillRect(o.x * cella, o.y * cella, cella, cella);
+		ctx.strokeStyle = o.bordo;
+		ctx.strokeRect(o.x * cella, o.y * cella, cella, cella);
+	}
+
+	// Qui disegniamo il serpente ecc.
+	function scena() {
+		// Ridisegniamo la scacchiera
+		// Cancelliamo
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, w, h);
+		// Disegniamo il bordo
+		ctx.strokeStyle = "black";
+		ctx.strokeRect(0, 0, w, h);
+
+		// Il movimento del serpente...
+		// Dove va la testa?
+		// La testa e' il primo elemento del vettore
+		var testa = { x: il_serpente[0].x, y: il_serpente[0].y, color: il_serpente[0].color, bordo: il_serpente[0].bordo };
+
+			testa.x++;
+
+			// Il serpente ha mangiato, cresce di una cella e aumenta il punteggio
+			punteggio++;
+			punteggioTag.innerHTML = "Score: " + punteggio;
+			// Nuovo cibo
+			crea_cibo();
+		 // Aggiungiamo la nuova testa
+		il_serpente.unshift(testa);
+
+		// Disegniamo il serpente
+		for (var i = 0; i < il_serpente.length; i++) {
+			disegna_cella(il_serpente[i]);
+		}
+
+		// Disegniamo il cibo
+		disegna_cella(cibo);
+	}
+
+	// Ooooh, le prime righe di codice eseguito!!!
+	init();
+
+}();
+		</script>
+	</body>
+</html>

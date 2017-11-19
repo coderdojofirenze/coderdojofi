@@ -1,0 +1,153 @@
+<html>
+<head>
+<style>
+.griglia{
+	width: 25px;
+	height: 25px;
+	text-align: center;
+	background-color: white;
+}
+.griglia:hover{
+	background-color: yellow;
+}
+
+</style>
+</head>
+<script>
+var campo=[];
+var turno='O';
+var finito=false;
+
+function gestisciClick(i,j,n,m){
+	if (finito) return;
+	if (campo[i][j]==-1){
+		campo[i][j]=turno;
+		document.getElementById(i+';'+j).innerHTML=turno;
+		if (checkWin(i,j,n,m,turno)==true){
+//			alert ('Ha vinto ' +turno );
+			document.getElementById('p_'+turno).value=parseInt(document.getElementById('p_'+turno).value)+1;
+			finito=true;
+			MostraNascondi('M');
+		}
+		turno=='O'?turno='X' : turno='O'
+		document.getElementById('turno').value=turno;
+	}
+}
+function minimo(a,b){
+	if (a<b) return a;
+	return b;
+}
+function massimo(a,b){
+	if (a>b) return a;
+	return b;
+}
+
+function checkWin(pos_i,pos_j,n,m,turno){
+	var a=[];
+	if (finito) return false;
+	start_i=massimo(pos_i-4,0);
+	start_j=massimo(pos_j-4,0);
+	stop_i=minimo(pos_i+5,n);
+	stop_j=minimo(pos_j+5,m);
+//Verticale
+	somma=0;
+	for (i=start_i; i<stop_i; i++){
+		if (campo[i][pos_j]==turno){
+			somma=somma+1;
+			a.push(i+';'+pos_j);
+			if (somma==5){ 
+				for	(index = 0; index < a.length; index++) 
+					document.getElementById(a[index]).style.background= 'lightgreen';
+				return true;
+			}
+		}
+		else somma=0;
+	}
+//Orizzontale
+	somma=0;a=[];
+	for (j=start_j; j<stop_j; j++){
+		if (campo[pos_i][j]==turno){
+			somma=somma+1;
+			a.push(pos_i+';'+j);
+			if (somma==5){ 
+				for	(index = 0; index < a.length; index++) 
+					document.getElementById(a[index]).style.background= 'lightgreen';
+				return true;			
+			}
+		}
+		else somma=0;
+	}
+//Diagonale -45 deg
+	somma=0;a=[];
+	start=-minimo(pos_i-start_i, pos_j-start_j);
+	stop=minimo(stop_i-pos_i,stop_j-pos_j);
+	for (i=start; i<stop; i++){
+		if (campo[pos_i+i][pos_j+i]==turno){
+			somma=somma+1;
+			a.push((pos_i+i)+';'+(pos_j+i));
+			if (somma==5){ 
+				for	(index = 0; index < a.length; index++) 
+					document.getElementById(a[index]).style.background= 'lightgreen';
+				return true;			
+			}
+		}
+		else somma=0;
+	}
+//Diagonale 45 deg
+	somma=0;a=[];
+	start=-minimo(stop_i-pos_i-1, pos_j-start_j);
+	stop=minimo(pos_i-start_i, stop_j-pos_j-1);
+	for (i=start; i<stop; i++){
+		if (campo[pos_i-i][pos_j+i]==turno){
+			somma=somma+1;
+			a.push((pos_i-i)+';'+(pos_j+i));
+			if (somma==5){ 
+				for	(index = 0; index < a.length; index++) 
+					document.getElementById(a[index]).style.background= 'lightgreen';
+				return true;			
+			}
+		}
+		else somma=0;
+	}
+	return false;
+}
+function MostraNascondi(x){
+		if (x=='N') {
+			document.getElementById('grigliack').style.display='none';
+		}
+		else{
+			document.getElementById('grigliack').style.display='block';
+		}
+}
+
+function drawTable(n,m){
+	x='<table id="tabella" border="thin" cellpadding="0" cellspacing="0">';
+	for (i=0; i<n; i++){
+		x=x + '<tr>';
+		campo[i]=[]; //il singolo elemento di campo è a sua volta una array
+		for (j=0; j<m; j++){
+			id= i +';'+j;
+			x=x + '<td class="griglia" onclick="gestisciClick('+i+','+j+','+n+','+m+')" id="' +id + '" >'+'</td>';
+			campo[i][j]=-1;
+		}
+		x=x + '</tr>';
+	}
+	document.getElementById('tutto').innerHTML=x+'</table>';
+	MostraNascondi('N');
+	finito=false;
+}
+</script>
+<body onload="MostraNascondi('M');">
+<div id="tutto">
+</div>
+</br><p id='grigliack'>
+Larghezza griglia: <input type="text" id="larghezza" size="4" value="20">
+Altezza griglia: <input type="text" id="altezza" size="4" value="20">  
+<input type="button" id="VIA" value="Comincia" onclick="drawTable (document.getElementById('altezza').value,document.getElementById('larghezza').value);"> 
+</p>
+Turno: <input type="text" id="turno" size="1" value="O" readonly>
+Punteggio O: <input type="text" id="p_O" size="4" value="0" readonly>
+Punteggio X: <input type="text" id="p_X" size="4" value="0" readonly>
+<!-- per debug <p id="asd"></p>-->
+</body>
+</html>

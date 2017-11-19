@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Ninja Snake</title>
+	</head>
+	<body>
+		<center>
+			<h1>Ninja Snake</h1>
+			<br/>
+			<canvas id="campo" width="480" height="480"></canvas>
+		</center>
+		<script type="text/javascript">
+
+var app = function () {
+	//Canvas inizializzazione
+	var canvas = document.getElementById('campo'),
+		ctx = canvas.getContext("2d"),
+	// larghezza campo
+		w = canvas.width,
+	// altezza campo
+		h = canvas.height,
+	// dimensione della cella (un quadratino)
+		cella = 10,
+	// variabile oggetto che rappresenta il cibo
+		cibo = {};
+
+	// Qui creiamo il cibo
+	function crea_cibo () {
+		// Questo oggetto rappresenta la posizione x/y del cibo
+		// fra tutte le celle del campo da gioco, proprio come su una scacchiera
+		cibo = {
+			x: Math.round(Math.random() * (w - cella) / cella),
+			y: Math.round(Math.random() * (h - cella) / cella),
+			color: 'brown',
+			bordo: 'red'
+		};
+	}
+
+	// prepariamo il gioco
+	function init() {
+		// creiamo il cibo
+		crea_cibo();
+	}
+
+	// Qui disegniamo un quadratino nella scacchiera
+	function disegna_cella(o)
+	{
+		ctx.fillStyle = o.color;
+		ctx.fillRect(o.x * cella, o.y * cella, cella, cella);
+		ctx.strokeStyle = o.bordo;
+		ctx.strokeRect(o.x * cella, o.y * cella, cella, cella);
+	}
+
+	// Qui disegniamo il serpente ecc.
+	function scena() {
+		// Ridisegniamo la scacchiera
+		// Cancelliamo
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, w, h);
+
+		// Disegniamo il cibo
+		disegna_cella(cibo);
+	}
+
+	// Ooooh, le prime righe di codice eseguito!!!
+	init();
+    scena();
+}();
+		</script>
+	</body>
+</html>

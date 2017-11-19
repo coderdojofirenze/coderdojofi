@@ -1,0 +1,81 @@
+<html>
+<head>
+	<style>
+		.cella {
+			border:1px black solid;
+			height:128px;
+			width:128px;
+			float:left;
+		}
+	</style>
+	<script>
+		var turno="X";
+		function cliccato(c){
+			c.innerHTML=turno;
+			turno=(turno=="X" ? "0" : "X" );
+			c.onclick=nulla();
+			controlla();
+		};
+		function nulla(){}
+		function controlla(){
+//righe
+			if (cella1_1.innerHTML==cella1_2.innerHTML && cella1_1.innerHTML==cella1_3.innerHTML && (cella1_1.innerHTML=="X" || cella1_1.innerHTML=="0")) {
+				alert ("Vinto " + cella1_1.innerHTML);
+			}
+			if (cella2_1.innerHTML==cella2_2.innerHTML && cella2_1.innerHTML==cella2_3.innerHTML && (cella2_1.innerHTML=="X" || cella2_1.innerHTML=="0")) {
+				alert ("Vinto " + cella2_1.innerHTML);
+			}
+			if (cella3_1.innerHTML==cella3_2.innerHTML && cella3_1.innerHTML==cella3_3.innerHTML && (cella3_1.innerHTML=="X" || cella3_1.innerHTML=="0")) {
+				alert ("Vinto " + cella3_1.innerHTML);
+			}
+//colonne
+			if (cella1_1.innerHTML==cella2_1.innerHTML && cella1_1.innerHTML==cella3_1.innerHTML && (cella1_1.innerHTML=="X" || cella1_1.innerHTML=="0")) {
+				alert ("Vinto " + cella1_1.innerHTML);
+			}
+			if (cella1_2.innerHTML==cella2_2.innerHTML && cella1_2.innerHTML==cella3_2.innerHTML && (cella1_2.innerHTML=="X" || cella1_2.innerHTML=="0")) {
+				alert ("Vinto " + cella1_2.innerHTML);
+			}
+			if (cella1_3.innerHTML==cella2_3.innerHTML && cella1_3.innerHTML==cella3_3.innerHTML && (cella1_3.innerHTML=="X" || cella1_3.innerHTML=="0")) {
+				alert ("Vinto " + cella1_3.innerHTML);
+			}
+//diagonali
+			if (cella1_1.innerHTML==cella2_2.innerHTML && cella1_1.innerHTML==cella3_3.innerHTML && (cella1_1.innerHTML=="X" || cella1_1.innerHTML=="0")) {
+				alert ("Vinto " + cella1_1.innerHTML);
+			}
+			if (cella1_3.innerHTML==cella2_2.innerHTML && cella2_2.innerHTML==cella3_1.innerHTML && (cella1_3.innerHTML=="X" || cella1_3.innerHTML=="0")) {
+				alert ("Vinto " + cella1_3.innerHTML);
+			}
+//fare colonne
+		}
+	</script>
+</head>
+<body>
+	<div id="tavolo">
+		<div id="riga1" style="clear:both;">
+			<div class="cella" id="cella1_1" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella1_2" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella1_3" onClick="cliccato(this);">
+			</div>
+		</div>
+		<div id="riga2" style="clear:both;">
+			<div class="cella" id="cella2_1" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella2_2" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella2_3" onClick="cliccato(this);">
+			</div>
+		</div>
+		<div id="riga3" style="clear:both;">
+			<div class="cella" id="cella3_1" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella3_2" onClick="cliccato(this);">
+			</div>
+			<div class="cella" id="cella3_3" onClick="cliccato(this);">
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

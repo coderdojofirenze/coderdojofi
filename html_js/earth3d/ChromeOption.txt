@@ -1,0 +1,12 @@
+--allow-file-access-from-files
+
+Linux
+open -a Google\ Chrome --args --allow-file-access-from-files
+chromium-browser --allow-file-access-from-files
+
+OSX
+open '/Applications/Google Chrome.app' --new --args -allow-file-access-from-files
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --allow-file-access-from-files
+
+Uncaught SecurityError: Failed to execute 'texImage2D' on 'WebGLRenderingContext': 
+	The cross-origin image at file:///E:/Game/Earth/img/earthmap1k.jpg may not be loaded.

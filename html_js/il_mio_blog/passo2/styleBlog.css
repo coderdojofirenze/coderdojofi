@@ -1,0 +1,19 @@
+body{
+	font-family:Arial, Helvetica;
+	background-image:url('personcina.png');
+}
+.cellamenu{
+	background-color:#D4E6CA;
+	height:50px;
+	width:25%;
+	text-align:center;
+	cursor:pointer;
+}
+.cellamenuselezionata{
+	background-color:#99FF66;
+	height:50px;
+	width:25%;
+	text-align:center;
+	cursor:pointer;
+}
+

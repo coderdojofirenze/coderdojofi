@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<script language="javascript">
+		function calcolaCodice(){
+			r=parseInt(document.getElementById('rosso').value);
+			g=parseInt(document.getElementById('verde').value);
+			b=parseInt(document.getElementById('blu').value);
+			return '#'+ ('0'+r.toString(16)).slice(-2)+('0'+g.toString(16)).slice(-2)+('0'+b.toString(16)).slice(-2);
+		}
+		function colora(id){
+			c=calcolaCodice();
+			div=document.getElementById(id);
+			div.style.backgroundColor=c;
+			document.getElementById('codice').innerHTML=c;
+		}
+		</script>
+	</head>
+	<body>
+		Rosso: <input type="Text" id="rosso" value=0 onblur="colora('colore')"><br/>
+		Verde: <input type="Text" id="verde" value=0 onblur="colora('colore')"><br/>
+		Blu: <input type="Text" id="blu" value=0 onblur="colora('colore')"><br/>
+		<label id='codice'>#000000</label><br/>
+		<div style="height:100px; width:100px; background-color:#000000; border:1" id="colore"></div>
+	</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Ninja Cells</title>
+  </head>
+  <body>
+	<div class="campo">
+		<center>
+		  <h1>Ninja Cells</h1>
+		  <div>Score: <span id="punteggio">0</span>&nbsp;Record: <span id="record">0</span></div>
+	      <br/>
+	      <canvas id="campo" width="900" height="500"></canvas>
+		</center>
+	</div>
+	<script type="text/javascript">
+
+/*******************************************************
+ * Questa funzione viene eseguita al load della pagina
+ * Unico scopo è isolare e nascondere il vero programma 
+ *   dalla pagina web
+ *******************************************************/
+var app = function () {
+	/*******************************************************
+	 * Definizione delle variabili usate dal programma
+	 *******************************************************/
+	//Canvas inizializzazione
+	var canvas = document.getElementById('campo'),
+		ctx = canvas.getContext("2d"),
+	// larghezza campo
+		w = canvas.width,
+	// altezza campo
+		h = canvas.height,
+	// punteggio raggiunto e record
+		punteggio,
+		punteggioTag = document.getElementById('punteggio'),
+		record = 0,
+		recordTag = document.getElementById('record'),
+	// You, la cella del giocatore
+		You,
+	// Celle, lista delle celle avversarie
+		Cells,
+	// il timer del gioco
+		game_loop;
+
+	/*******************************************************
+	 * Funzione che disegna la cella passata nel parametro
+	 *******************************************************/
+	function disegna(cell)
+	{
+		ctx.beginPath();
+		ctx.fillStyle = cell.color || "red";
+		ctx.arc(cell.x, cell.y, cell.radius, 0, 2 * Math.PI, false);
+		ctx.fill();
+	}
+
+	/*******************************************************
+	 * Funzione che crea una nuova cella avversaria
+	 *******************************************************/
+	function crea() {
+		// posizione della cella
+		var x = w / 4 + Math.floor(w * Math.random() / 2);
+		var y = h / 4 + Math.floor(h * Math.random() / 2);
+		// colore della cella
+		//var c = "rgb(" + Math.floor(128 * Math.random() + 128) + "," + Math.floor(128 * Math.random() + 128) + "," + Math.floor(128 * Math.random() + 128) + ")";
+		var c = "red";
+		var cella = { x: x, y: y, radius: 3, color: c, dx: 0, dy: 0 };
+		Cells.push(cella);
+	}
+
+	/*******************************************************
+	 * Funzione che muove casualmente una cella avversaria
+	 *  l'algoritmo cerca di produrre un movimento casuale
+	 *  ma non oscillante intorno alla posizione iniziale
+	 *  introducendo una dipendenza dalla posizione precedente.
+	 * Torna true se il centro della cella è uscito dal
+	 *  campo di gioco
+	 *******************************************************/
+	function move(p){
+		p.dx += 0.4 * (Math.random() - 0.5);
+		if (p.dx > 1)
+			p.dx = 1;
+		else if (p.dx < -1)
+			p.dx = -1;
+		p.x += p.dx;
+		p.dy += 0.3 * (Math.random() - 0.5);
+		if (p.dy > 1)
+			p.dy = 1;
+		else if (p.dy < -1)
+			p.dy = -1;
+		p.y += p.dy;
+		// Verifichiamo se esce dalla scacchiera
+		if (p.x < 0 || p.x >= w || p.y < 0 || p.y >= h) {
+			return true;
+		}
+		return false;
+	}
+
+	/*******************************************************
+	 * Funzione che determina se due celle si sovrappongono,
+	 *  eseguendo il calcolo complesso solo per le celle 
+	 *  i cui quadrati circoscritti si sovrappongono.
+	 * Torna 0 se non si sovrappongono, diverso da 0 altrimenti.
+	 * Il raggio maggiore, con prevalenza della prima cella,
+	 *  determina chi mangia chi.
+	 *******************************************************/
+	function _mangio(p, q) {
+		var dx = p.x - q.x;
+		var dy = p.y - q.y;
+		var free = p.radius + q.radius;
+
+		if (Math.abs(dx) >= free || Math.abs(dy) >= free)
+			return 0;
+
+		var distance = Math.sqrt(dx * dx + dy * dy);
+		if (distance < free){
+			if (p.radius >= q.radius){
+				// p ha mangiato
+				return 1;
+			}else{
+				// q ha mangiato
+				return -1;
+			}
+		}
+		return 0;
+	}
+
+	/*******************************************************
+	 * Funzione che determina se due celle si sovrappongono,
+	 *  e fa crescere la cella che mangia.
+	 *******************************************************/
+	function mangio(p, q) {
+		var ret = _mangio(p, q);
+		if (ret > 0){
+			// p ha mangiato, cresce del 10% di q
+			p.radius += q.radius * 0.1;
+		}else if (ret < 0){
+			// q ha mangiato, cresce del 10% di p
+			q.radius += p.radius * 0.1;
+		}
+		return ret;
+	}
+
+	/*******************************************************
+	 * Funzione che disegna e aggiorna il campo da gioco,
+	 *  controlla il movimento e lo stato del gioco.
+	 * Viene chiamata circa 16 volte al secondo
+	 *******************************************************/
+	function scena() {
+		// Ridisegniamo la scacchiera
+		// Cancelliamo
+		ctx.fillStyle = "lightgreen";
+		ctx.fillRect(0, 0, w, h);
+		// Disegniamo il bordo
+		ctx.strokeStyle = "black";
+		ctx.strokeRect(0, 0, w, h);
+
+		// Il movimento delle celle...
+		// You è controllato da te
+		// e si muove nella direzione scelta
+		if (direzione == "right")
+			You.x++;
+		else if (direzione == "left")
+			You.x--;
+		else if (direzione == "up")
+			You.y--;
+		else if (direzione == "down")
+			You.y++;
+
+		// Verifichiamo se esce dalla scacchiera
+		if (You.x < 0 || You.x >= w || You.y < 0 || You.y >= h) {
+			// Perso!!! Ricomincia il gioco
+			alert("Sei uscito dal gioco");
+			init();
+			return;
+		}
+		
+		if (You.radius > h / 3 || Cells.length == 0){
+			alert("HAI VINTO");
+			init();
+			return;
+		}
+
+		// Verifica se You mangia o è mangiato da altre celle
+		Cells.forEach(function(e, idx){
+			var eat = mangio(You, e);
+			if (eat > 0){
+				// You ha mangiato e aumenta il punteggio
+				punteggio++;
+				punteggioTag.innerHTML = punteggio;
+				if (punteggio > record) {
+					record = punteggio;
+					recordTag.innerHTML = record;
+				}
+				// elimina cella mangiata
+				delete Cells[idx];
+				// Nuova cella con probabilità del 40%
+				if (Math.random() > 0.6)
+					crea();
+			}else if (eat < 0){
+				// You è stato  mangiato
+				// Perso!!! Ricomincia il gioco
+				alert("Sei stato mangiato");
+				init();
+				return;
+			}
+		});
+
+		// Muove e Verifica se altre celle mangiano
+		// Cells è un Array, forEach è un metodo di Array
+		// Chiama la funzione passata come parametro per ogni elemento
+		// definito nell'Array
+		Cells.forEach(function(p, idx){
+			// Muove la cella, la scarta se esce dal gioco
+			if (move(p)){
+				delete Cells[idx];
+				return;
+			}
+			// Verifica per tutte le celle successive del vettore se mangia o viene mangiata
+			for (var i=idx+1; i<Cells.length; i++){
+				// Alcune celle possono essere già state mangiate ...
+				if (!Cells[i])
+					continue;
+				var eat = mangio(p, Cells[i]);
+				if (eat > 0){
+					// La cella ha mangiato
+					// elimina cella mangiata
+					delete Cells[i];
+				}else if (eat < 0){
+					// La cella è stato mangiata
+					// elimina la cella
+					delete Cells[idx];
+				}
+				if (eat != 0){
+					// Nuova cella con probabilità del 40%
+					if (Math.random() > 0.6)
+						crea();
+				}
+			}
+		});
+		// Nuova cella con probabilità del 20%
+		if (Math.random() > 0.70)
+			crea();
+
+		// Pulizia celle mangiate
+		// Ricrea il vettore delle celle avversarie scartando le celle cancellate
+		// Cells è un Array, map è un metodo di Array che costruisce un nuovo array con il valore tornato dalla funzione
+		// Chiama la funzione passata come parametro per ogni elemento definito nell'Array
+		//  ma non chiama a funzione per gli elementi non definiti (cancellati con delete)
+		Cells = Cells.map(function(e) { return e; });
+
+		// Disegna tutte le celle
+		disegna(You);
+		Cells.forEach(disegna);
+	}
+
+	/*******************************************************
+	 * Funzione che inizializza e reinizializza il gioco.
+	 *******************************************************/
+	function init() {
+		// direzione iniziale
+		direzione = "right";
+		// creiamo You
+		You = { x: w/2, y: h/2, radius: 3.3, color: 'blue' };
+		// creiamo le celle
+		Cells = [];
+		for (var i=0; i<30; i++)
+			crea();
+		// azzeriamo il punteggio
+		punteggio = 0;
+		// Facciamo muovere le celle
+		// Creiamo un timer che chiama la funzione scena ogni 60 ms (circa 16 volte ogni secondo)
+		if (typeof game_loop !== "undefined")
+			clearInterval(game_loop);
+		game_loop = setInterval(scena, 60);
+	}
+
+	/*******************************************************
+	 * Funzione chiamata ad ogni tasto premuto.
+	 * I keyCode 37, 38, 39 e 40 corrispondono ai tasti freccia
+	 *******************************************************/
+	function keydown(e) {
+		var key = e.keyCode;
+		// Verifichiamo quale freccia e' stata premuta
+		if (key == "37")
+			direzione = "left";
+		else if (key == "38")
+			direzione = "up";
+		else if (key == "39")
+			direzione = "right";
+		else if (key == "40")
+			direzione = "down";
+	}
+
+	// Ooooh, le prime righe di codice eseguito!!!
+	document.onkeydown = keydown;
+	init();
+
+}();
+	</script>
+  </body>
+</html>
