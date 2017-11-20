@@ -1,0 +1,28 @@
+.griglia {
+  /* dimensione delle celle */
+	width: 10px;
+	height: 10px;
+	text-align: center;
+	background-color: white;
+}
+
+/* Questo, ereditato da filetto5, a life non serve */
+.griglia:hover {
+	background-color: yellow;
+}
+/* */
+
+table {
+	/* questo serve per avere il bordo delle *
+	 * celle formato da una singola linea    */
+	border-collapse: collapse;
+}
+
+td, th {
+
+  /* bordo sottile di colore grigio chiaro */
+	border: 1px solid LightGray;
+	/* celle accostate il piu' possibile */
+	padding: 0px;
+	spacing: 0px;
+}
