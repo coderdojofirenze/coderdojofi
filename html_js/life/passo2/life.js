@@ -3,6 +3,10 @@ var c = document.createElement("canvas");
 var ctx = c.getContext("2d");
 var cellsize = 10;
 
+var cellAliveColor = "#cb4b16";
+var cellDeadColor = "#073642";
+
+
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
 // le informazioni del campo da creare
@@ -34,6 +38,7 @@ function drawGrid(nrows, ncols, color)
 }
 
 // -----------------------------------------------------------------------------
+// NUOVO IN PASSO 2
 function fillCell(i, j, color)
 {
   var cellfullsize = cellsize + 1;
@@ -44,10 +49,18 @@ function fillCell(i, j, color)
   ctx.fillRect(cellstartx, cellstarty, 9, 9);
 }
 
+function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
+function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
+
+// For promises, read:
+//   https://ponyfoo.com/articles/es6-promises-in-depth
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // -----------------------------------------------------------------------------
 // Disegna il campo con le dimensioni date
-function disegnaCampo(nrows, ncols)
+async function disegnaCampo(nrows, ncols)
 {
   MostraNascondi('N');
   div = document.getElementById("lifegameBoard");
@@ -59,20 +72,38 @@ function disegnaCampo(nrows, ncols)
   ctx.stroke();
   div.appendChild(c);
 
-  setTimeout(function() {
+  // NUOVO IN PASSO 2
+  while (1) {
+    await sleep(1000);
+
     ctx.beginPath();
-    fillCell(0, 0, "#cb4b16")
-    fillCell(1, 1, "#cb4b16")
-    fillCell(2, 2, "#cb4b16")
-    fillCell(3, 3, "#cb4b16")
-    fillCell(4, 4, "#cb4b16")
-    fillCell(5, 5, "#cb4b16")
-    fillCell(6, 6, "#cb4b16")
-    fillCell(7, 6, "#cb4b16")
-    fillCell(8, 6, "#cb4b16")
-    fillCell(9, 6, "#cb4b16")
+    cellAlive(0, 0);
+    cellAlive(1, 1);
+    cellAlive(2, 2);
+    cellAlive(3, 3);
+    cellAlive(4, 4);
+    cellAlive(5, 5);
+    cellAlive(6, 6);
+    cellAlive(7, 6);
+    cellAlive(8, 6);
+    cellAlive(9, 6);
     ctx.stroke();
     div.appendChild(c);
-  }, 3000);
+
+    await sleep(1000);
+    ctx.beginPath();
+    cellDead(0, 0);
+    cellDead(1, 1);
+    cellDead(2, 2);
+    cellDead(3, 3);
+    cellDead(4, 4);
+    cellDead(5, 5);
+    cellDead(6, 6);
+    cellDead(7, 6);
+    cellDead(8, 6);
+    cellDead(9, 6);
+    ctx.stroke();
+    div.appendChild(c);
+  }
 
 }
