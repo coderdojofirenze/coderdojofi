@@ -6,6 +6,17 @@ var cellsize = 10;
 var cellAliveColor = "#cb4b16";
 var cellDeadColor = "#073642";
 
+// -----------------------------------------------------------------------------
+// Programma principale chiamato alla pressione del pulsante "Comincia"
+//  per il momento semplicemente nasconde i campi per il setup e disegna il
+// campo vuoto
+function eseguiProgrammaLife(nrows, ncols)
+{
+  MostraNascondi('N');
+  disegnaCampo(nrows, ncols);
+
+  coloraCelleACaso();    // <-- nuovo in passo 2
+}
 
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
@@ -14,6 +25,21 @@ function MostraNascondi(x)
 {
   if (x=='N') document.getElementById('setup').style.display='none';
   else document.getElementById('setup').style.display='block';
+}
+
+// -----------------------------------------------------------------------------
+// Disegna il campo con le dimensioni date
+function disegnaCampo(nrows, ncols)
+{
+  div = document.getElementById("lifegameBoard");
+  c.width = (cellsize + 1) * ncols + 2;
+  c.height = (cellsize + 1) * nrows + 2;
+
+  ctx.beginPath();
+  drawGrid(nrows, ncols, "#657b83")
+  ctx.stroke();
+  div.appendChild(c);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -36,9 +62,11 @@ function drawGrid(nrows, ncols, color)
   ctx.strokeStyle = color;
 
 }
+// FINE CODICE PASSO 1
 
+// *****************************************************************************
+// DA QUI IN POI IL CODICE NUOVO DEL PASSO 2
 // -----------------------------------------------------------------------------
-// NUOVO IN PASSO 2
 function fillCell(i, j, color)
 {
   var cellfullsize = cellsize + 1;
@@ -52,6 +80,7 @@ function fillCell(i, j, color)
 function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
 function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
 
+// -----------------------------------------------------------------------------
 // For promises, read:
 //   https://ponyfoo.com/articles/es6-promises-in-depth
 function sleep(ms) {
@@ -59,20 +88,8 @@ function sleep(ms) {
 }
 
 // -----------------------------------------------------------------------------
-// Disegna il campo con le dimensioni date
-async function disegnaCampo(nrows, ncols)
+async function coloraCelleACaso()
 {
-  MostraNascondi('N');
-  div = document.getElementById("lifegameBoard");
-  c.width = (cellsize + 1) * ncols + 2;
-  c.height = (cellsize + 1) * nrows + 2;
-
-  ctx.beginPath();
-  drawGrid(nrows, ncols, "#657b83")
-  ctx.stroke();
-  div.appendChild(c);
-
-  // NUOVO IN PASSO 2
   while (1) {
     await sleep(1000);
 
@@ -105,5 +122,4 @@ async function disegnaCampo(nrows, ncols)
     ctx.stroke();
     div.appendChild(c);
   }
-
 }

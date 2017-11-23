@@ -7,7 +7,7 @@ Qui basta sapere che l'automa life... **FIXME --- TO BE COMPLETED**
 
 ## Passo 1: creare una griglia con utilizzando un canvas
 
-In questo primo passo scriveremo una pagina contenente una griglia di quadrati che costituirà la base per il nostro gioco. Per prima cosa tramite la pagina chiederemo la dimensione della griglia, poi la griglia sarà costruita con le dimensioni date utilizzando un Canvas.
+In questo primo passo scriveremo una pagina contenente una griglia di quadrati che costituirà la base per il nostro gioco. Per prima cosa, tramite la pagina web, chiederemo la dimensione della griglia, poi la griglia sarà costruita con le dimensioni date utilizzando un **Canvas**.
 
 Inoltre in questa fase diamo l'impostazione al nostro progetto utilizzando file separati: uno per il foglio di stile (CSS), uno per rappresentare la pagina HTLM e uno con il codice Javascript. Creiamo quindi tre file:
 
@@ -20,7 +20,7 @@ body {
 }
 ```
 
-* `life.html`: file con la definizione pagina HTML. Lo snippet di codice riportato sotto contiene la pagina intera, con commenti per spiegare il significato delle varie sezioni. Come si vede questa pagina include il file `life.js` che vedremo al prossimo punto e che conterrà il codice javascript che realizzerà il gioco.
+* `life.html`: file con la definizione pagina HTML. Lo snippet di codice riportato sotto contiene la pagina intera, con commenti per spiegare il significato delle varie sezioni. Come si vede, questa pagina include il file `life.js` che vedremo al prossimo punto e che conterrà il codice javascript che realizzerà il gioco.
 
 ```html
 <html>
@@ -47,7 +47,7 @@ body {
     </p>
     <p>
       <input type="button" id="VIA" value="Comincia"
-        onclick="disegnaCampo(document.getElementById('altezza').value,
+        onclick="eseguiProgrammaLife(document.getElementById('altezza').value,
         document.getElementById('larghezza').value);">
     </p>
   </div>
@@ -61,14 +61,41 @@ body {
 ```
 Come si vede, il `body` della pagina è diviso in due parti: un `<div>` di setup che visulizza i campi per introdurre il numero di celle della griglia (righe e colonne della matrice di gioco) e il pulsante per dare il via alla simulazione e un `<div>` principale inizialmente vuoto che verrà riempito con la griglia una volta premuto il bottone "Comincia".
 
-* `life.js`: file con il codice Javascript. In questa prima fase il codice semplicemente viene attivato alla pressione del tasto "Comincia". Si entra nella funzione `disegnaCampo()` che prima nasconde il `<div>` di setup e poi costruisce la griglia.
-La griglia viene costruita tramite un Canvas HTML. I Canvas sono utilizzati proprio per costruire al volo oggetti grafica su una pagina HTML. Le operazioni grafiche sono realizzate proprio tramite funzioni javascript.
+* `life.js`: file con il codice Javascript. In questa prima fase il codice semplicemente viene attivato alla pressione del tasto "Comincia". Si entra nella funzione `eseguiProgrammaLife()` che per il momento si limita a nascondere il `<div>` di setup e poi a costruire la griglia.
+
+La griglia viene costruita tramite un Canvas HTML. I Canvas sono utilizzati proprio per fare grafica "al volo" su una pagina HTML. Le operazioni grafiche sono realizzate proprio tramite funzioni javascript.
 
 ```Javascript
 // Variabili globali
 var c = document.createElement("canvas");
 var ctx = c.getContext("2d");
 var cellsize = 10;
+
+// -----------------------------------------------------------------------------
+// Programma principale chiamato alla pressione del pulsante "Comincia"
+//  per il momento semplicemente nasconde i campi per il setup e disegna il
+// campo vuoto
+function eseguiProgrammaLife(nrows, ncols)
+{
+  MostraNascondi('N');
+  disegnaCampo(nrows, ncols);
+
+}
+
+// -----------------------------------------------------------------------------
+// Disegna il campo con le dimensioni date
+function disegnaCampo(nrows, ncols)
+{
+  MostraNascondi('N');
+  div = document.getElementById("lifegameBoard");
+  c.width = (cellsize + 1) * ncols + 2;
+  c.height = (cellsize + 1) * nrows + 2;
+
+  ctx.beginPath();
+  drawGrid(nrows, ncols, "#657b83")
+  ctx.stroke();
+  div.appendChild(c);
+}
 
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
@@ -99,27 +126,60 @@ function drawGrid(nrows, ncols, color)
   ctx.strokeStyle = color;
 
 }
-
-// -----------------------------------------------------------------------------
-// Disegnol campo con le dimensioni date
-function disegnaCampo(nrows, ncols)
-{
-  MostraNascondi('N');
-  div = document.getElementById("lifegameBoard");
-  c.width = (cellsize + 1) * ncols + 2;
-  c.height = (cellsize + 1) * nrows + 2;
-
-  ctx.beginPath();
-  drawGrid(nrows, ncols, "#657b83")
-  ctx.stroke();
-  div.appendChild(c);
-}
 ```
 
 
 ## Passo 2: riempimento della griglia di gioco con cellule vive
 
 Per accendere o spegnere una cellula si utilizza la funzione `fillCell()`, che colora il contenuto di una cella della griglia di un colore a piacere.
-Se la cella contiene una cellula viva, questa viene colorata con un colore brillante, altrimenti rimane colorata con il colore dello sfondo. Si definiscono quindi due funzioni `cellAlive()` che chiama `fillCell()` con il colore brillante e `cellDead()` che la chiama con il colore di background.
+Se la cella contiene una cellula viva, questa viene colorata con un colore brillante, altrimenti vuol dire che siamo nella situazione in cui la cella non contiene una cellula e rimane quindi colorata con il colore dello sfondo. Si definiscono quindi due funzioni `cellAlive()` che, per colorare la cella, chiama `fillCell()` con il colore brillante e `cellDead()` che la "spenge" chiamando `fillCell()` con il colore di background.
+
+Ecco quindi il codice delle tre funzioni, da aggiungere al file `life.js`:
+
+```Javascript
+// -----------------------------------------------------------------------------
+function fillCell(i, j, color)
+{
+  var cellfullsize = cellsize + 1;
+  var cellstartx = (i*cellfullsize)+2;
+  var cellstarty = (j*cellfullsize)+2;
+
+  ctx.fillStyle = color;
+  ctx.fillRect(cellstartx, cellstarty, 9, 9);
+}
+
+function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
+function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
+```
+
+Per provare, coloriamo un po' di celle aggiungendo la seguente riga alla funzione principale `eseguiProgrammaLife()`:
+
+```Javascript
+  coloraCelleACaso();    // <-- nuovo in passo 2
+```
+
+e implementiamo la funzione `coloraCelleACaso()` per esempio nel seguente modo:
+
+```Javascript
+function coloraCelleACaso()
+{
+    ctx.beginPath();
+    cellAlive(0, 0);
+    cellAlive(1, 1);
+    cellAlive(2, 2);
+    cellAlive(3, 3);
+    cellAlive(4, 4);
+    cellAlive(5, 5);
+    cellAlive(6, 6);
+    cellAlive(7, 6);
+    cellAlive(8, 6);
+    cellAlive(9, 6);
+    ctx.stroke();
+    div.appendChild(c);
+}
+```
+
+## Passo 3: il gioco della vita
+
 
 _** TO BE COMPLETED **_
