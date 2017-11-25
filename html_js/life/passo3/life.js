@@ -3,11 +3,15 @@ var c = document.createElement("canvas");
 var ctx = c.getContext("2d");
 var cellsize = 10;
 
-var cellAliveColor = "#cb4b16";
-var cellDeadColor = "#073642";
+var numeroRighe;
+var numeroColonne;
 
-var lifeA = [];   // <--- aggiunta al passo 3
-var lifeB = [];   // <--- aggiunta al passo 3
+var lifeA = [];                   // <-- aggiunta al passo 2
+var lifeB = [];                   // <-- aggiunta al passo 3
+
+var cellAliveColor = "#cb4b16";   // <-- aggiunta al passo 2
+var cellDeadColor = "#073642";    // <-- aggiunta al passo 2
+
 
 // -----------------------------------------------------------------------------
 // Programma principale chiamato alla pressione del pulsante "Comincia"
@@ -15,12 +19,30 @@ var lifeB = [];   // <--- aggiunta al passo 3
 // campo vuoto
 function eseguiProgrammaLife(nrows, ncols)
 {
-  preparaMatrici(nrows, ncols);   // <-- nuovo in passo 3
-  MostraNascondi('N');
-  disegnaCampo(nrows, ncols);
+  // salva il numero di righe e di colonne in due variabili
+  // globali che saranno utilizzate nel seguito dal resto del Programma
+  numeroRighe = nrows;
+  numeroColonne = ncols
 
-  lifeStart(nrows, ncols);                        // <-- nuovo in passo 3
-  coloraCelleInBaseAMatrice(lifeA, nrows, ncols); // <-- nuovo in passo 3
+  // nasconde i campi per la lettura delle dimensioni del campo
+  MostraNascondi('N');
+
+  // disegna il campo di gioco
+  disegnaCampo();
+
+  // Prepara la matrice Life
+  allocaMemoriaPerMatrice(lifeA);         // <-- aggiunta al passo 2
+  allocaMemoriaPerMatrice(lifeB);         // <-- aggiunta al passo 3
+
+  // colora un po' di celle a casaccio
+  inizializzaMatriceLifeACaso(lifeA);     // <-- aggiunta al passo 2
+  coloraCelleInBaseAMatrice(lifeA);       // <-- aggiunta al passo 2
+
+
+  // Codice nuovo inserito nel passo 3 ----------
+  // Ciclo principale
+  eseguiCicloDellaVita();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -34,32 +56,32 @@ function MostraNascondi(x)
 
 // -----------------------------------------------------------------------------
 // Disegna il campo con le dimensioni date
-function disegnaCampo(nrows, ncols)
+function disegnaCampo()
 {
   div = document.getElementById("lifegameBoard");
-  c.width = (cellsize + 1) * ncols + 2;
-  c.height = (cellsize + 1) * nrows + 2;
+  c.width = (cellsize + 1) * numeroColonne + 2;
+  c.height = (cellsize + 1) * numeroRighe + 2;
 
   ctx.beginPath();
-  drawGrid(nrows, ncols, "#657b83")
+  drawGrid("#657b83")
   ctx.stroke();
   div.appendChild(c);
 
 }
 
 // -----------------------------------------------------------------------------
-function drawGrid(nrows, ncols, color)
+function drawGrid(color)
 {
   var cellfullsize = cellsize + 1;
-  var sizetotalx = cellfullsize * ncols;
-  var sizetotaly = cellfullsize * nrows;
+  var sizetotalx = cellfullsize * numeroColonne;
+  var sizetotaly = cellfullsize * numeroRighe;
 
-  for (var row = 0, currenty = 1; row <= nrows; row++, currenty += cellfullsize)
+  for (var row = 0, currenty = 1; row <= numeroRighe; row++, currenty += cellfullsize)
   {
     ctx.moveTo(1, currenty);
     ctx.lineTo(1 + sizetotalx, currenty);
   }
-  for (var col = 0, currentx = 1; col <= ncols; col++, currentx += cellfullsize)
+  for (var col = 0, currentx = 1; col <= numeroColonne; col++, currentx += cellfullsize)
   {
     ctx.moveTo(currentx, 1);
     ctx.lineTo(currentx, 1 + sizetotaly);
@@ -71,6 +93,52 @@ function drawGrid(nrows, ncols, color)
 
 // *****************************************************************************
 // DA QUI IN POI IL CODICE NUOVO DEL PASSO 2
+// -----------------------------------------------------------------------------
+function allocaMemoriaPerMatrice(mtx)
+{
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    mtx[row] = new Array(numeroColonne);
+  }
+}
+
+// -----------------------------------------------------------------------------
+function inizializzaMatriceLifeACaso(mtx)
+{
+  // riempie mtx[][] di 0 e 1 a caso
+  //    0 significa cella morta
+  //    1 significa cella viva
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    for (var col = 0; col < numeroColonne; col++)
+    {
+      // Random ritorna un numero da 0 a 1
+      // noi vogliamo più o meno una cella viva ogni quattro
+      if (Math.random() >= 0.75)
+        mtx[row][col] = 1;
+      else
+        mtx[row][col] = 0;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+function coloraCelleInBaseAMatrice(mtx)
+{
+  ctx.beginPath();
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    for (var col = 0; col < numeroColonne; col++)
+    {
+      if (mtx[row][col] != 0)
+        cellAlive(row, col);
+      else
+        cellDead(row, col);
+    }
+  }
+  div.appendChild(c);
+}
+
 // -----------------------------------------------------------------------------
 function fillCell(i, j, color)
 {
@@ -85,48 +153,142 @@ function fillCell(i, j, color)
 function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
 function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
 
+
 // *****************************************************************************
 // DA QUI IN POI IL CODICE NUOVO DEL PASSO 3
 // -----------------------------------------------------------------------------
-function preparaMatrici(nrows, ncols)
+// For promises, read:
+//   https://ponyfoo.com/articles/es6-promises-in-depth
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// -----------------------------------------------------------------------------
+async function eseguiCicloDellaVita(nrows, ncols)
 {
-  for (var row = 0; row < nrows; row++)
+  while (1)
   {
-    lifeA[row] = new Array(ncols);
-    lifeB[row] = new Array(ncols);
+    await sleep(200);
+    calcolaProssimaGenerazione(lifeA, lifeB);
+    coloraCelleInBaseAMatrice(lifeB);
+    await sleep(200);
+    calcolaProssimaGenerazione(lifeB, lifeA);
+    coloraCelleInBaseAMatrice(lifeA);
   }
 }
 
 // -----------------------------------------------------------------------------
-
-function lifeStart(nrows, ncols)
+function calcolaProssimaGenerazione(oldmtx, newmtx)
 {
-  // riempie lifeA[][] di 0 e 1 a caso
-  //    0 significa cella morta
-  //    1 significa cella viva
-  for (var row = 0; row < nrows; row++)
+  for (var row = 0; row < numeroRighe; row++)
   {
-    for (var col = 0; col < ncols; col++)
+    for (var col = 0; col < numeroColonne; col++)
     {
-      if (Math.random() >= 0.5)
-        lifeA[row][col] = 1;
+      if (oldmtx[row][col] == 1)
+      {
+        if (valutaMorte(oldmtx, row, col))
+          newmtx[row][col] = 0;
+        else
+          newmtx[row][col] = 1;
+      }
       else
-        lifeA[row][col] = 0;
+      {
+        if (valutaVita(oldmtx, row, col))
+          newmtx[row][col] = 1;
+        else
+          newmtx[row][col] = 0;
+      }
     }
   }
 }
 
 // -----------------------------------------------------------------------------
-function coloraCelleInBaseAMatrice(mtx, nrows, ncols)
+function valutaMorte(mtx, row, col)
+{
+  var liveCount = 0;
+  // valuta se una cella viva deve morire in base al suo intorno
+  // Qualsiasi cella viva:
+  //   - Se ha intorno a se meno di due celle, muore
+  //   - se ha intorno a se più di tre celle vive adiacenti, muore
+  for (i = -1; i <= 1; i++) {
+    for (j = -1; j <= 1; j++){
+
+      // non considera se stesso
+      if ((i == 0) && (j == 0))
+        continue;
+
+      // simula la geometria di un toroide ----
+      if (mtx[normalizzaRiga(row + i)][normalizzaColonna(col + i)]) {
+        ++liveCount;
+        if (liveCount > 3) return true;
+      }
+      // --------------------------------------
+    }
+  }
+
+  if (liveCount < 2) return true;
+  return false;
+}
+
+
+// -----------------------------------------------------------------------------
+function valutaVita(mtx, row, col)
+{
+  var liveCount = 0;
+  // valuta se una cella vuota (morta) deve popolarsi in base al suo intorno
+  // Qualsiasi cella morta:
+  //   - Se ha intorno a se esattamente tre celle vive, nasce
+  for (i = -1; i <= 1; i++) {
+    for (j = -1; j <= 1; j++){
+
+      // non considera se stesso
+      if ((i == 0) && (j == 0))
+        continue;
+
+      // simula la geometria di un toroide ----
+      if (mtx[normalizzaRiga(row + i)][normalizzaColonna(col + i)]) {
+        ++liveCount;
+      }
+      // --------------------------------------
+    }
+  }
+  if (liveCount == 3) return true;
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+function coloraCelleInBaseAMatrice(mtx)
 {
   ctx.beginPath();
-  for (var row = 0; row < nrows; row++)
+  for (var row = 0; row < numeroRighe; row++)
   {
-    for (var col = 0; col < ncols; col++)
+    for (var col = 0; col < numeroColonne; col++)
     {
       if (mtx[row][col] != 0)
         cellAlive(row, col);
+      else
+        cellDead(row, col);
     }
   }
   div.appendChild(c);
+}
+
+// Queste funzioni servono per simulare la geometri di un toroide.
+// Sapreste spiegare perché?
+// -----------------------------------------------------------------------------
+function normalizzaRiga(row)
+{
+  if (row < 0)
+    return = numeroRighe - 1;
+  else
+    return row % numeroRighe;
+}
+
+// -----------------------------------------------------------------------------
+function normalizzaColonna(col)
+{
+  if (col < 0)
+    return numeroColonne - 1;
+  else
+    return col % numeroColonne;
 }

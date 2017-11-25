@@ -3,8 +3,14 @@ var c = document.createElement("canvas");
 var ctx = c.getContext("2d");
 var cellsize = 10;
 
-var cellAliveColor = "#cb4b16";
-var cellDeadColor = "#073642";
+var numeroRighe;
+var numeroColonne;
+
+var lifeA = [];                   // <-- aggiunta al passo 2
+
+var cellAliveColor = "#cb4b16";   // <-- aggiunta al passo 2
+var cellDeadColor = "#073642";    // <-- aggiunta al passo 2
+
 
 // -----------------------------------------------------------------------------
 // Programma principale chiamato alla pressione del pulsante "Comincia"
@@ -12,10 +18,23 @@ var cellDeadColor = "#073642";
 // campo vuoto
 function eseguiProgrammaLife(nrows, ncols)
 {
-  MostraNascondi('N');
-  disegnaCampo(nrows, ncols);
+  // salva il numero di righe e di colonne in due variabili
+  // globali che saranno utilizzate nel seguito dal resto del Programma
+  numeroRighe = nrows;
+  numeroColonne = ncols
 
-  coloraCelleACaso();    // <-- nuovo in passo 2
+  // nasconde i campi per la lettura delle dimensioni del campo
+  MostraNascondi('N');
+
+  // disegna il campo di gioco
+  disegnaCampo();
+
+  // Prepara la matrice Life
+  allocaMemoriaPerMatrice(lifeA);         // <-- aggiunta al passo 2
+
+  // colora un po' di celle a casaccio
+  inizializzaMatriceLifeACaso(lifeA);     // <-- aggiunta al passo 2
+  coloraCelleInBaseAMatrice(lifeA);       // <-- aggiunta al passo 2
 }
 
 // -----------------------------------------------------------------------------
@@ -29,32 +48,32 @@ function MostraNascondi(x)
 
 // -----------------------------------------------------------------------------
 // Disegna il campo con le dimensioni date
-function disegnaCampo(nrows, ncols)
+function disegnaCampo()
 {
   div = document.getElementById("lifegameBoard");
-  c.width = (cellsize + 1) * ncols + 2;
-  c.height = (cellsize + 1) * nrows + 2;
+  c.width = (cellsize + 1) * numeroColonne + 2;
+  c.height = (cellsize + 1) * numeroRighe + 2;
 
   ctx.beginPath();
-  drawGrid(nrows, ncols, "#657b83")
+  drawGrid("#657b83")
   ctx.stroke();
   div.appendChild(c);
 
 }
 
 // -----------------------------------------------------------------------------
-function drawGrid(nrows, ncols, color)
+function drawGrid(color)
 {
   var cellfullsize = cellsize + 1;
-  var sizetotalx = cellfullsize * ncols;
-  var sizetotaly = cellfullsize * nrows;
+  var sizetotalx = cellfullsize * numeroColonne;
+  var sizetotaly = cellfullsize * numeroRighe;
 
-  for (var row = 0, currenty = 1; row <= nrows; row++, currenty += cellfullsize)
+  for (var row = 0, currenty = 1; row <= numeroRighe; row++, currenty += cellfullsize)
   {
     ctx.moveTo(1, currenty);
     ctx.lineTo(1 + sizetotalx, currenty);
   }
-  for (var col = 0, currentx = 1; col <= ncols; col++, currentx += cellfullsize)
+  for (var col = 0, currentx = 1; col <= numeroColonne; col++, currentx += cellfullsize)
   {
     ctx.moveTo(currentx, 1);
     ctx.lineTo(currentx, 1 + sizetotaly);
@@ -67,11 +86,57 @@ function drawGrid(nrows, ncols, color)
 // *****************************************************************************
 // DA QUI IN POI IL CODICE NUOVO DEL PASSO 2
 // -----------------------------------------------------------------------------
+function allocaMemoriaPerMatrice(mtx)
+{
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    mtx[row] = new Array(numeroColonne);
+  }
+}
+
+// -----------------------------------------------------------------------------
+function inizializzaMatriceLifeACaso(mtx)
+{
+  // riempie mtx[][] di 0 e 1 a caso
+  //    0 significa cella morta
+  //    1 significa cella viva
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    for (var col = 0; col < numeroColonne; col++)
+    {
+      // Random ritorna un numero da 0 a 1
+      // noi vogliamo più o meno una cella viva ogni quattro
+      if (Math.random() >= 0.75)
+        mtx[row][col] = 1;
+      else
+        mtx[row][col] = 0;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+function coloraCelleInBaseAMatrice(mtx)
+{
+  ctx.beginPath();
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    for (var col = 0; col < numeroColonne; col++)
+    {
+      if (mtx[row][col] != 0)
+        cellAlive(row, col);
+      else
+        cellDead(row, col);
+    }
+  }
+  div.appendChild(c);
+}
+
+// -----------------------------------------------------------------------------
 function fillCell(i, j, color)
 {
   var cellfullsize = cellsize + 1;
-  var cellstartx = (i*cellfullsize)+2;
-  var cellstarty = (j*cellfullsize)+2;
+  var cellstartx = (j*cellfullsize)+2;
+  var cellstarty = (i*cellfullsize)+2;
 
   ctx.fillStyle = color;
   ctx.fillRect(cellstartx, cellstarty, 9, 9);
@@ -79,47 +144,3 @@ function fillCell(i, j, color)
 
 function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
 function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
-
-// -----------------------------------------------------------------------------
-// For promises, read:
-//   https://ponyfoo.com/articles/es6-promises-in-depth
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// -----------------------------------------------------------------------------
-async function coloraCelleACaso()
-{
-  while (1) {
-    await sleep(1000);
-
-    ctx.beginPath();
-    cellAlive(0, 0);
-    cellAlive(1, 1);
-    cellAlive(2, 2);
-    cellAlive(3, 3);
-    cellAlive(4, 4);
-    cellAlive(5, 5);
-    cellAlive(6, 6);
-    cellAlive(7, 6);
-    cellAlive(8, 6);
-    cellAlive(9, 6);
-    ctx.stroke();
-    div.appendChild(c);
-
-    await sleep(1000);
-    ctx.beginPath();
-    cellDead(0, 0);
-    cellDead(1, 1);
-    cellDead(2, 2);
-    cellDead(3, 3);
-    cellDead(4, 4);
-    cellDead(5, 5);
-    cellDead(6, 6);
-    cellDead(7, 6);
-    cellDead(8, 6);
-    cellDead(9, 6);
-    ctx.stroke();
-    div.appendChild(c);
-  }
-}
