@@ -3,7 +3,7 @@
 Scopo del presente tutorial è di realizzare un versione HTML / Javascript del ["**gioco della vita**"](https://it.wikipedia.org/wiki/Gioco_della_vita)  o _life_ del matematico inglese John Conway.
 Si tratta del più famoso esempio di automa cellulare: un modello matematico usato per descrivere l'evoluzione di sistemi complessi. Si rimanda alla vasta bibliografia sull'argomento per maggiori dettagli.
 
-Qui basta sapere che l'automa life... **FIXME --- TO BE COMPLETED**
+Qui basta sapere che nel gioco della vita si simula l'evoluzione di un insieme di cellule poste in una griglia bidimensionale. Ad ogni istante di tempo lo stato di una cellula dipende dallo stato delle celle che la circondano. I dettagli li scopriremo via via che andiamo avanti nella realizzazione.
 
 ## Passo 1: creare una griglia con utilizzando un canvas
 
@@ -11,7 +11,7 @@ In questo primo passo scriveremo una pagina contenente una griglia di quadrati c
 
 Inoltre in questa fase diamo l'impostazione al nostro progetto utilizzando file separati: uno per il foglio di stile (CSS), uno per rappresentare la pagina HTLM e uno con il codice Javascript. Creiamo quindi tre file:
 
-* `life.css`: file con la definizione di stile. Per il momento contiene solo i colori di background e foreground da assegnare a tutti gli oggetti. Per la scelta dei colori abbiamo preso spunto al tema ["Solarized"](http://ethanschoonover.com/solarized).
+* `life.css`: file con la definizione di stile. Contiene solo i colori di background e foreground da assegnare a tutti gli oggetti. Per la scelta dei colori abbiamo preso spunto al tema ["Solarized"](http://ethanschoonover.com/solarized).
 
 ```CSS
 body {
@@ -20,11 +20,15 @@ body {
 }
 ```
 
+Potevamo integrarlo all'interno del file HTML, ma lasciarlo fuori ha dei vantaggi che scopriremo con l'esperienza. In generare è una buona idea separare il contenuto della pagina (file HTML) dai dati che utilizziamo per realizzarla (il file CSS) e dal codice che costituisce il motore che fa evolvere la pagina (il codice Javascript).
+
 * `life.html`: file con la definizione pagina HTML. Lo snippet di codice riportato sotto contiene la pagina intera, con commenti per spiegare il significato delle varie sezioni. Come si vede, questa pagina include il file `life.js` che vedremo al prossimo punto e che conterrà il codice javascript che realizzerà il gioco.
 
 ```html
-<html>
+<!DOCTYPE html>
+<html lang="it">
 <head>
+  <meta charset="utf-8"/>
   <!-- include lo stile sheet -->
   <link href="life.css" rel="stylesheet" type="text/css">
 </head>
@@ -53,17 +57,19 @@ body {
   </div>
 
   <!-- Questa è l'area di gioco vera e propria, il cui contenuto
-       sara' costruito dalla funzione js disegnaCampo() -->
+       sara' costruito dalla funzione js preparaCanvas() -->
   <div id="lifegameBoard">
   </div>
 </body>
 </html>
 ```
-Come si vede, il `body` della pagina è diviso in due parti: un `<div>` di setup che visulizza i campi per introdurre il numero di celle della griglia (righe e colonne della matrice di gioco) e il pulsante per dare il via alla simulazione e un `<div>` principale inizialmente vuoto che verrà riempito con la griglia una volta premuto il bottone "Comincia".
+Come si vede, il `body` della pagina è diviso in due parti: un `<div>` di setup che visulizza i campi per introdurre il numero di celle della griglia (righe e colonne della matrice di gioco) e il pulsante per dare il via alla simulazione e un `<div>` principale inizialmente vuoto che verrà riempito con la griglia una volta premuto il bottone "Comincia". Questa pagina, come il file HTML non cambierà più per il resto del tutorial. Concentriamoci adesso sul vero motore del gioco.
 
-* `life.js`: file con il codice Javascript. In questa prima fase il codice semplicemente viene attivato alla pressione del tasto "Comincia". Si entra nella funzione `eseguiProgrammaLife()` che per il momento si limita a nascondere il `<div>` di setup e poi a costruire la griglia.
+* `life.js`: è file con il codice Javascript. In questa prima fase il codice semplicemente viene attivato alla pressione del tasto "Comincia". Si entra nella funzione `eseguiProgrammaLife()` che per il momento si limita a nascondere il `<div>` di setup e poi a costruire la griglia.
 
-La griglia viene costruita tramite un Canvas HTML. I Canvas sono utilizzati proprio per fare grafica "al volo" su una pagina HTML. Le operazioni grafiche sono realizzate proprio tramite funzioni javascript.
+La griglia viene costruita tramite un Canvas HTML. I Canvas sono utilizzati proprio per fare grafica "al volo" su una pagina HTML. Le operazioni grafiche sono realizzate tramite funzioni javascript.
+
+Ecco la prima versione  del file `life.js`:
 
 ```Javascript
 // Variabili globali
@@ -82,14 +88,14 @@ function eseguiProgrammaLife(nrows, ncols)
 {
   // salva il numero di righe e di colonne in due variabili
   // globali che saranno utilizzate nel seguito dal resto del Programma
-  numeroRighe = nrows;
-  numeroColonne = ncols
+  numeroRighe = parseInt(nrows);
+  numeroColonne = parseInt(ncols);
 
   // nasconde i campi per la lettura delle dimensioni del campo
   MostraNascondi('N');
 
   // disegna il campo di gioco
-  disegnaCampo();
+  preparaCanvas();
 }
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
@@ -102,20 +108,20 @@ function MostraNascondi(x)
 
 // -----------------------------------------------------------------------------
 // Disegnol campo con le dimensioni date
-function disegnaCampo()
+function preparaCanvas()
 {
   div = document.getElementById("lifegameBoard");
   c.width = (cellsize + 1) * numeroColonne + 2;
   c.height = (cellsize + 1) * numeroRighe + 2;
 
   ctx.beginPath();
-  drawGrid("#657b83")
+  disegnaCampo("#657b83")
   ctx.stroke();
   div.appendChild(c);
 }
 
 // -----------------------------------------------------------------------------
-function drawGrid(color)
+function disegnaCampo(color)
 {
   var cellfullsize = cellsize + 1;
   var sizetotalx = cellfullsize * numeroColonne;
@@ -136,6 +142,13 @@ function drawGrid(color)
 }
 ```
 
+Caricando la pagina `life.html` con un browser, il risultato sarà una prima pagina con i controlli per inserire i parametri della simulazione (la dimensione della griglia) e il pulsante "Comincia" che lancia lo script Javascript. La seconda pagina è il risultato della manipolazione dello script: i controlli scompaiono e compare la grid di gioco. Quello che appare è riportato nelle immagini che seguono.
+
+La schermata con i controlli:
+![I controlli per l'inserimento delle dimensioni][life_controlli]
+
+La griglia vuota:
+![La griglia vuota][life_grigliavuota]
 
 ## Passo 2: riempimento della griglia di gioco con cellule vive
 
@@ -145,11 +158,9 @@ Quello che ci serve in questa fase è preparare le strutture dati che conservano
 
 Successivamente coloreremo il campo da gioco in modo da rispecchiare il contenuto della matrice. Dove c'è un uno coloreremo la cella di un colore vivo, altrimenti la lasceremo del colore dello sfondo.
 
-### Preparazione della matrice
-
 Modifichiamo il programma `life.js` nel seguente modo:
 
-* All'inizio aggiungiamo la dichiarazione della variabile `lifeA` che rappresenta la nostra matrice della vita. Aggiungiamo anche la definizione dei colori che vogliamo usare per colorare le celle:
+* All'inizio aggiungiamo la dichiarazione della variabile `lifeA` che rappresenta la nostra matrice della vita. Aggiungiamo anche la definizione dei colori che vogliamo usare per colorare le celle (prendendoli dal tema solarized):
 
 ```Javascript
 var lifeA = [];                   // <-- aggiunta al passo 2
@@ -234,6 +245,9 @@ function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
 
 A questo punto proviamo il gioco: vedremo che una volta cliccato il tasto "Comincia" apparirà in nostro campo da gioco con alcune celle colorate (più o meno una su quattro).
 
+Ecco un esempio di una nostra nuova griglia:
+
+![La griglia popolata][life_grigliapopolata]
 
 ## Passo 3: il gioco della vita
 
@@ -253,18 +267,18 @@ Per calcolare un'iterazione abbiamo bisogno di una seconda matrice. Aggiungiamo 
 var lifeB = [];                   // <-- aggiunta al passo 3
 ...
 
-async function eseguiProgrammaLife(nrows, ncols)
+function eseguiProgrammaLife(nrows, ncols)
 {
   // salva il numero di righe e di colonne in due variabili
   // globali che saranno utilizzate nel seguito dal resto del Programma
-  numeroRighe = nrows;
-  numeroColonne = ncols
+  numeroRighe = parseInt(nrows);
+  numeroColonne = parseInt(ncols);
 
   // nasconde i campi per la lettura delle dimensioni del campo
   MostraNascondi('N');
 
   // disegna il campo di gioco
-  disegnaCampo();
+  preparaCanvas();
 
   // Prepara la matrice Life
   allocaMemoriaPerMatrice(lifeA);         // <-- aggiunta al passo 2
@@ -275,6 +289,37 @@ async function eseguiProgrammaLife(nrows, ncols)
   coloraCelleInBaseAMatrice(lifeA);       // <-- aggiunta al passo 2
 
   // Codice nuovo inserito nel passo 3 ----------
+  // Ciclo principale
+  eseguiCicloDellaVita();
+}
+```
+
+A questo punto non ci rimane altro che realizzare la funzione `eseguiCicloDellaVita()` e tutte le funzioni che ne conseguono. Vediamo il codice inserito in questo step.
+
+* Le funzione asincrona (async) `eseguiCicloDellaVita()` calcola continuamente l'evoluzione della matrice di gioco alternando l'uso delle matrici `lifeA` e `lifeB`.
+
+* La funzione `calcolaProssimaGenerazione()` parte da una matrice contenente lo stato corrente della griglia e popola una seconda matrice con lo stato dello step successivo applicando le regole viste in precedenze. Questa funzione, il vero cuore del nostro programma, controlla una ad una tutte le celle e in base allo stato delle celle che la circondano decide lo stato successivo.
+
+  * se la cellula è viva, valuta se deve farla morire. Per fare questa valutazione chiama la funzione `valutaMorte()`
+  * se la cellula è morta, valuta se deve farla nascere. Per fare questa valutazione chiama la funzione `valutaVita()`
+
+* Le funzioni `valutaVita()` e `valutaMorte()` fanno uso di un paio di helper che normalizzano gli indici di riga e colonna delle celle adiacenti nel caso in cui la cella sia su un bordo o ancor peggio su un angolo. Difatti ricordiamoci che vogliamo simulare un mondo toroidale, per cui, ad esempio, una cella sul lato sinistro della matrice ha delle celle adiacenti che nella rappresentazione grafica stanno al lato opposto (sull'ultima colonna a destra).
+
+Ecco quindi il codice inserito per il passo 3:
+
+```Javascript
+// *****************************************************************************
+// DA QUI IN POI IL CODICE NUOVO DEL PASSO 3
+// -----------------------------------------------------------------------------
+// For promises, read:
+//   https://ponyfoo.com/articles/es6-promises-in-depth
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// -----------------------------------------------------------------------------
+async function eseguiCicloDellaVita(nrows, ncols)
+{
   while (1)
   {
     await sleep(200);
@@ -284,20 +329,116 @@ async function eseguiProgrammaLife(nrows, ncols)
     calcolaProssimaGenerazione(lifeB, lifeA);
     coloraCelleInBaseAMatrice(lifeA);
   }
-  // --------------------------------------------
+}
+
+// -----------------------------------------------------------------------------
+function calcolaProssimaGenerazione(oldmtx, newmtx)
+{
+  for (var row = 0; row < numeroRighe; row++)
+  {
+    for (var col = 0; col < numeroColonne; col++)
+    {
+      if (oldmtx[row][col] == 1)
+      {
+        if (valutaMorte(oldmtx, row, col))
+          newmtx[row][col] = 0;
+        else
+          newmtx[row][col] = 1;
+      }
+      else
+      {
+        if (valutaVita(oldmtx, row, col))
+          newmtx[row][col] = 1;
+        else
+          newmtx[row][col] = 0;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+function valutaMorte(mtx, row, col)
+{
+  var liveCount = 0;
+  // valuta se una cella viva deve morire in base al suo intorno
+  // Qualsiasi cella viva:
+  //   - Se ha intorno a se meno di due celle, muore
+  //   - se ha intorno a se più di tre celle vive adiacenti, muore
+  for (i = -1; i <= 1; i++) {
+    for (j = -1; j <= 1; j++){
+
+      // non considera se stesso
+      if ((i == 0) && (j == 0))
+        continue;
+
+      // simula la geometria di un toroide ----
+      if (mtx[normalizzaRiga(row + i)][normalizzaColonna(col + j)]) {
+        ++liveCount;
+        if (liveCount > 3) return true;
+      }
+      // --------------------------------------
+    }
+  }
+
+  if (liveCount < 2) return true;
+  return false;
+}
+
+
+// -----------------------------------------------------------------------------
+function valutaVita(mtx, row, col)
+{
+  var liveCount = 0;
+  // valuta se una cella vuota (morta) deve popolarsi in base al suo intorno
+  // Qualsiasi cella morta:
+  //   - Se ha intorno a se esattamente tre celle vive, nasce
+  for (i = -1; i <= 1; i++) {
+    for (j = -1; j <= 1; j++){
+
+      // non considera se stesso
+      if ((i == 0) && (j == 0))
+        continue;
+
+      // simula la geometria di un toroide ----
+      if (mtx[normalizzaRiga(row + i)][normalizzaColonna(col + j)]) {
+        ++liveCount;
+      }
+      // --------------------------------------
+    }
+  }
+  if (liveCount == 3) return true;
+  return false;
+}
+
+// Queste funzioni servono per simulare la geometria di un toroide.
+// Sapreste spiegare perché?
+// -----------------------------------------------------------------------------
+function normalizzaRiga(row)
+{
+  if (row < 0)
+    return numeroRighe + row;
+  else
+    return row % numeroRighe;
+}
+
+// -----------------------------------------------------------------------------
+function normalizzaColonna(col)
+{
+  if (col < 0)
+    return numeroColonne + col;
+  else
+    return col % numeroColonne;
 }
 ```
 
-N.B.: non dimenticare l'inserimento della parola chiave `async` nella definizione della funzione.
+Adesso non rimane che giocare!.
 
-A questo punto non ci rimane altro che realizzare la funzione `calcolaProssimaGenerazione()` che prende come input un primo argomento con lo stato corrente della nostra matrice della vita e ritorna nella matrice passata come secondo argomento il nuovo stato della matrice della vita.
+## Possibili estensioni
 
-```Javascript
-```
+L'estensione ovvia è fare in modo di simulare alcuni campi di partenza che contengano delle configurazioni predefinite che ci permettano di esplorare il comportamento dell'algoritmo della vita. Per alcune di queste configurazioni si rimanda alla [**pagina di Wikipedia in inglese**](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
+Per fare questo aggiungere dei radio button che permettano di specificare la configurazione di partenza nella pagina di setup, passare un terzo argomento alla funzione `eseguiProgrammaLife()` e modificare il file js in modo da popolare la matrice di partenza in modo diverso a seconda della scelta. .
 
-
-
-
-
-_** TO BE COMPLETED **_
+[life_controlli]: assets/imgs/life_controlli.png
+[life_grigliavuota]: assets/imgs/life_grigliavuota.png
+[life_grigliapopolata]: assets/imgs/life_grigliapopolata.png

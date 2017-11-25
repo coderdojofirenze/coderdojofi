@@ -14,14 +14,14 @@ function eseguiProgrammaLife(nrows, ncols)
 {
   // salva il numero di righe e di colonne in due variabili
   // globali che saranno utilizzate nel seguito dal resto del Programma
-  numeroRighe = nrows;
-  numeroColonne = ncols
+  numeroRighe = parseInt(nrows);
+  numeroColonne = parseInt(ncols);
 
   // nasconde i campi per la lettura delle dimensioni del campo
   MostraNascondi('N');
 
   // disegna il campo di gioco
-  disegnaCampo();
+  preparaCanvas();
 }
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
@@ -34,20 +34,20 @@ function MostraNascondi(x)
 
 // -----------------------------------------------------------------------------
 // Disegnol campo con le dimensioni date
-function disegnaCampo()
+function preparaCanvas()
 {
   div = document.getElementById("lifegameBoard");
   c.width = (cellsize + 1) * numeroColonne + 2;
   c.height = (cellsize + 1) * numeroRighe + 2;
 
   ctx.beginPath();
-  drawGrid("#657b83")
+  disegnaCampo("#657b83")
   ctx.stroke();
   div.appendChild(c);
 }
 
 // -----------------------------------------------------------------------------
-function drawGrid(color)
+function disegnaCampo(color)
 {
   var cellfullsize = cellsize + 1;
   var sizetotalx = cellfullsize * numeroColonne;
