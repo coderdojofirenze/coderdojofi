@@ -1,4 +1,4 @@
-# Coderdojo di Firenze - HTML / Javascript - Tutorial Life
+# HTML / Javascript - Tutorial "Life": il gioco della vita
 
 Scopo del presente tutorial è di realizzare un versione HTML / Javascript del ["**gioco della vita**"](https://it.wikipedia.org/wiki/Gioco_della_vita)  o _life_ del matematico inglese John Conway.
 Si tratta del più famoso esempio di automa cellulare: un modello matematico usato per descrivere l'evoluzione di sistemi complessi. Si rimanda alla vasta bibliografia sull'argomento per maggiori dettagli.
@@ -84,8 +84,7 @@ var numeroColonne;
 // Programma principale chiamato alla pressione del pulsante "Comincia"
 //  per il momento semplicemente nasconde i campi per il setup e disegna il
 // campo vuoto
-function eseguiProgrammaLife(nrows, ncols)
-{
+function eseguiProgrammaLife(nrows, ncols) {
   // salva il numero di righe e di colonne in due variabili
   // globali che saranno utilizzate nel seguito dal resto del Programma
   numeroRighe = parseInt(nrows);
@@ -97,19 +96,18 @@ function eseguiProgrammaLife(nrows, ncols)
   // disegna il campo di gioco
   preparaCanvas();
 }
+
 // -----------------------------------------------------------------------------
 // Serve per mostrare e nascondere gli item per inserire
 // le informazioni del campo da creare
-function MostraNascondi(x)
-{
+function MostraNascondi(x) {
   if (x=='N') document.getElementById('setup').style.display='none';
   else document.getElementById('setup').style.display='block';
 }
 
 // -----------------------------------------------------------------------------
 // Disegnol campo con le dimensioni date
-function preparaCanvas()
-{
+function preparaCanvas() {
   div = document.getElementById("lifegameBoard");
   c.width = (cellsize + 1) * numeroColonne + 2;
   c.height = (cellsize + 1) * numeroRighe + 2;
@@ -121,8 +119,7 @@ function preparaCanvas()
 }
 
 // -----------------------------------------------------------------------------
-function disegnaCampo(color)
-{
+function disegnaCampo(color) {
   var cellfullsize = cellsize + 1;
   var sizetotalx = cellfullsize * numeroColonne;
   var sizetotaly = cellfullsize * numeroRighe;
@@ -138,7 +135,6 @@ function disegnaCampo(color)
     ctx.lineTo(currentx, 1 + sizetotaly);
   }
   ctx.strokeStyle = color;
-
 }
 ```
 
@@ -243,9 +239,9 @@ function cellAlive(i,j) { fillCell(i, j, cellAliveColor); }
 function cellDead(i,j) { fillCell(i, j, cellDeadColor); }
 ```
 
-A questo punto proviamo il gioco: vedremo che una volta cliccato il tasto "Comincia" apparirà in nostro campo da gioco con alcune celle colorate (più o meno una su quattro).
+A questo punto proviamo il gioco: vedremo che una volta cliccato il tasto "Comincia" apparirà il campo da gioco con alcune celle colorate (più o meno una su quattro).
 
-Ecco un esempio di una nostra nuova griglia:
+Ecco un esempio di una nuova griglia:
 
 ![La griglia popolata][life_grigliapopolata]
 
@@ -384,7 +380,6 @@ function valutaMorte(mtx, row, col)
   return false;
 }
 
-
 // -----------------------------------------------------------------------------
 function valutaVita(mtx, row, col)
 {
@@ -431,13 +426,22 @@ function normalizzaColonna(col)
 }
 ```
 
-Adesso non rimane che giocare!.
-
 ## Possibili estensioni
 
 L'estensione ovvia è fare in modo di simulare alcuni campi di partenza che contengano delle configurazioni predefinite che ci permettano di esplorare il comportamento dell'algoritmo della vita. Per alcune di queste configurazioni si rimanda alla [**pagina di Wikipedia in inglese**](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
 Per fare questo aggiungere dei radio button che permettano di specificare la configurazione di partenza nella pagina di setup, passare un terzo argomento alla funzione `eseguiProgrammaLife()` e modificare il file js in modo da popolare la matrice di partenza in modo diverso a seconda della scelta. .
+
+## Credits
+
+Questo tutorial è stato realizzato dai mentor del Coderdojo di Firenze. Il tutorial e il codice sorgente del programma possono essere scaricati dall'area delle risorse del sito del Coderdojo di firenze, all'URL:
+
+[**https://firenze.coderdojo.it/risorse/**](https://firenze.coderdojo.it/risorse/)
+
+Tutto il codice prodotto dal Coderdojo di Firenze per l'uso è anche liberamente disponibile nel seguente repository su Github:
+
+[**https://github.com/coderdojofirenze/coderdojofi**](https://github.com/coderdojofirenze/coderdojofi)
+
 
 [life_controlli]: assets/imgs/life_controlli.png
 [life_grigliavuota]: assets/imgs/life_grigliavuota.png
