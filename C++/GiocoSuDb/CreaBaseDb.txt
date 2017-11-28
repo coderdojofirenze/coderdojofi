@@ -1,0 +1,2 @@
+SELECT * FROM sqlite_master
+CREATE TABLE IF NOT EXISTS "main"."luogo" ("IDluogo" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL  UNIQUE, "Descrizione" TEXT, "Scelta_A" INTEGER, "Scelta_B" INTEGER)
