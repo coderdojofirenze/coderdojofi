@@ -1,0 +1,5 @@
+Ti trovi fuori da un castello. Davanti a te c’è un fossato e alla tua destra un ponte levatoio. Cosa fai? a) Ti tuffi nel fossato b) Percorri il ponte levatoio? | 2 | 3
+Il fossato era infestato dai coccodrilli. Riprova, troverai un modo più fortunato di morire! Premi (a) o (b) per ricominciare. | 1 | 1
+Percorri il ponte levatoio e ti trivi nell’atrio del castello. C’è una porta alla tua sinistra e una alla tua destra. Cosa fai? a) Entri nella stanza a sinistra b) Provi la porta di destra | 4 | 5
+Sei nella sala del tesoro. In mezzo alla stanza c’è uno scrigno chiuso. Cosa fai? a) Apri lo scrigno b) Torni indietro | 6 | 7
+Sei nella stanza delle armature. Su una parete c’è una spada con su un cartello che recita:”Spada Invincibile”. Cosa fai? a) Torni indietro b) Prendi la Spada Invincibile | 8 | 9
