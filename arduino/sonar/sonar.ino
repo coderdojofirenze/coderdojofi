@@ -1,51 +1,33 @@
-#include <Servo.h>
-
-//HC RS04 Sensore ultrasuoni
-int triggerPort = 7;
-int echoPort = 8;
-
-
-Servo myservo;
-int segno=10;
-int angle=5;
-long distanza;
+import processing.serial.*;
+Serial porta;
+int r;
+Integer Colore=0;
 
 void setup(){
-  pinMode( triggerPort, OUTPUT );
-  pinMode( echoPort, INPUT );
-  Serial.begin(9600);
-  myservo.attach(9);
+println ("seriali:");
+println (Serial.list());
+porta=new Serial(this,Serial.list()[0],9600);
+size(600, 600);
+//background(19, 64, 180);
+stroke(19, 64, 180);
+delay(500);
 }
-
-void loop(){
- angle+=segno;
- if (angle >= 175) segno=-10;
- if (angle <= 5) segno=10;
- 
- myservo.write(angle);
-//porta bassa l'uscita del trigger
-digitalWrite( triggerPort, LOW );
- 
-//invia un impulso di 10microsec su trigger
-digitalWrite( triggerPort, HIGH );
-delayMicroseconds( 10 );
-digitalWrite( triggerPort, LOW );
- 
-long duration = pulseIn( echoPort, HIGH ); //microsec
-
-if( duration > 38000 ) distanza=0;
-else distanza = 0.034 * duration / 2;  //cm
-
-Serial.print ("Angolo: "); 
-Serial.print (angle);
-Serial.print( " durata: " );
-Serial.print( duration );
-Serial.print( " " );
-Serial.print( "distanza: " );
-Serial.print( distanza );
-Serial.println( " " );
- 
-//aspetta 1.5 secondi
-delay( 1500 );
-
+void draw(){
+String val;
+Integer a;
+Integer d;
+String s[];
+if (porta.available()>0){
+  val = porta.readStringUntil('\n'); 
+  if (val != null){
+    println(val);
+    s=val.split(" ");
+    d=Integer.valueOf(s[5]);
+    a=Integer.valueOf(s[1]);
+    fill(19, 64, 180);
+    arc(300, 580,1000, 1000, PI+(a-5)*PI/180, PI+(a+5)*PI/180);
+    fill(0);
+    arc(300, 580, d*2, d*2, PI+(a-5)*PI/180, PI+(a+5)*PI/180);
+  }
+}
 }
