@@ -11,26 +11,26 @@
 
 <body>
   <!-- Questa e' l'area dove inizialmente sono specificati i parametri
-  del gioco. Quando si premera' il tasto "Comincia" quest'area
-  verrà nascosta e verrà visualizzata l'area successiva -->
+       del gioco. Quando si premera' il tasto "Comincia" quest'area
+       verrà nascosta e verrà visualizzata l'area successiva -->
   <div id="setup">
+
     <p>
       Altezza griglia (numero righe):
       <input type="text" id="altezza" size="4" value="20">
-    </p>
-    <p>
       Larghezza griglia (numero colonne):
       <input type="text" id="larghezza" size="4" value="20">
     </p>
     <p>
       <input type="button" id="VIA" value="Comincia"
-      onclick="eseguiProgrammaLife(document.getElementById('altezza').value,
-      document.getElementById('larghezza').value);">
+      onclick="eseguiProgrammaLife(
+        parseInt(document.getElementById('altezza').value),
+        parseInt(document.getElementById('larghezza').value));">
     </p>
   </div>
 
   <!-- Questa è l'area di gioco vera e propria, il cui contenuto
-  sara' costruito dalla funzione js disegnaCampo() -->
+       sara' costruito dalla funzione js disegnaCampo() -->
   <div id="lifegameBoard">
   </div>
 </body>

@@ -11,12 +11,12 @@
 
 <body>
   <!-- Questa e' l'area dove inizialmente sono specificati i parametri
-  del gioco. Quando si premera' il tasto "Comincia" quest'area
-  verrà nascosta e verrà visualizzata l'area successiva -->
+       del gioco. Quando si premera' il tasto "Comincia" quest'area
+       verrà nascosta e verrà visualizzata l'area successiva -->
   <div id="setup">
 
     <p>
-      <input type="radio" name="fieldtype" value="freefield" checked> Campo casuale
+      <input type="radio" name="tipocampo" value="casuale" checked> Campo casuale
     </p>
     <p>
       Altezza griglia (numero righe):
@@ -25,26 +25,25 @@
       <input type="text" id="larghezza" size="4" value="20">
     </p>
     <p>
-      <input type="radio" name="fieldtype" value="glidersfield"> Campo di alianti
+      <input type="radio" name="tipocampo" value="alianti"> Campo di alianti
     </p>
     <p>
-      <input type="radio" name="fieldtype" value="lwssfield"> Campo di astronavi
+      <input type="radio" name="tipocampo" value="astronavi"> Campo di astronavi
     </p>
     <p>
-      <input type="radio" name="fieldtype" value="oscillators"> Oscillatori
+      <input type="radio" name="tipocampo" value="oscillatori"> Oscillatori
     </p>
-
 
     <p>
       <input type="button" id="VIA" value="Comincia"
       onclick="eseguiProgrammaLife(
-      document.getElementById('altezza').value,
-      document.getElementById('larghezza').value);">
+        parseInt(document.getElementById('altezza').value),
+        parseInt(document.getElementById('larghezza').value));">
     </p>
   </div>
 
   <!-- Questa è l'area di gioco vera e propria, il cui contenuto
-  sara' costruito dalla funzione js disegnaCampo() -->
+       sara' costruito dalla funzione js disegnaCampo() -->
   <div id="lifegameBoard">
   </div>
 </body>
