@@ -1,0 +1,23 @@
+Appunti realizzativi
+
+Realizzeremo tutti gli elementi come oggetti, con classi deritate da altre
+
+- drago, orchetto, eremita, mercante (altri a piacere): da personaggio
+può contenere un oggetto, può essere amichevole o nemico e richiedere oggetti per rilasciare i suoi
+
+- chiave (verde,rossa,blu,oro), moneta (oro, argento), rifornimento (acqua, cibo, medicina), arma (spada, scudo, lancia, frecce) da oggetto
+può servire per interagire con un personaggio (ucciderlo in caso di nemici) o accedere a un luogo
+
+- deserto, villaggio (casolare, porta, stanza interna), caverna, castello (stanza, stanza finale), fiume (acqua, ponte, guado, porto) da luogo
+Può richiedere uno o più oggetti
+
+L'avventuriero può portare fino a un certo numero di oggetti, si sposta tra gli ambienti e interagisce con questi e con i personaggi
+
+La generazione della mappa prevede la costruzione a aprtire dalla stanza finale, attorno alal quale posizionare gli altri ambienti secondo i criteri:
+
+- La stanza finale contiene il drago finale (da uccidere con una particolare arma) o l'ultimo enigma. Si accede alla stanza da una sola direzione e per accedere occorre avere con sé la chiave d'oro
+- La stanza finale è circondata da altre stanze, che possono contenere altri personaggi (un mercante per gli ultimi rifornimenti, draghi od orchetti)
+- il deserto richiede acqua per essere attraversato (una unità ogni volta che si entra)
+- gli orchetti possono essere uccisi se si possiede spada e lancia, altrimenti assorbono energia ogni volta che si incontrano
+- i draghi sono eliminabili con una freccia, possono essere tenuti a bada con lancia o spada ma bloccano il passaggio
+- una volta ucciso un drago si può rinvenire uno o più oggetti
