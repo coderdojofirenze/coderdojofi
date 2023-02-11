@@ -1,0 +1,37 @@
+{
+    "map": [
+        [
+            {
+                "name": "Deserto rosso"
+                ,"type": "deserto"
+                ,"chars": [
+                    {
+                        "name":"Dragone rosso"
+                        ,"type": "dragone"
+                    }
+                ]
+            }
+            ,{
+                "name": "Lago bagnato"
+                ,"type": "lago"
+                ,"chars": []
+            }
+        ]
+        ,[
+            {
+                "name": "Deserto rosso"
+                ,"type": "deserto"
+            }
+            ,{
+                "name": "Borgo allegro"
+                ,"type": "borgo"
+                ,"chars": [
+                    {
+                        "name": "Pinuzz' 'o mariuolo"
+                        ,"type": "mercante"
+                    }
+                ]
+            }
+        ]
+    ]
+}

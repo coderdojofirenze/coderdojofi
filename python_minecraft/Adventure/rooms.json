@@ -1,0 +1,19 @@
+{
+    "rooms": [
+        {
+            "name": "deserto"
+            ,"description": "C'è un sacco di sabbia intorno a te"
+            ,"bonusmalus": -1
+        }
+        ,{
+            "name": "lago"
+            ,"description": "C'è un sacco di acqua davanti a te"
+            ,"bonusmalus": 0
+        }
+        ,{
+            "name": "borgo"
+            ,"description": "C'è un sacco di case intorno a te"
+            ,"bonusmalus": 0
+        }
+    ]
+}

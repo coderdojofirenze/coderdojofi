@@ -1,19 +1,17 @@
 {
     "characters": [
         {
-            "name": "dragon"
+            "name": "dragone"
             ,"strenght": 5
             ,"damage": 1
             ,"objs": []
-            ,"pos": [1,1]
         }
         ,{
-            "name": "merchant"
+            "name": "mercante"
             ,"strenght": 1
             ,"damage": 0
             ,"objs": ["gold cup"
                 ,"red key"]
-            ,"pos": [2,1]
         }
     ]
 }
