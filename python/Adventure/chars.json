@@ -2,15 +2,17 @@
     "characters": [
         {
             "name": "dragone"
+            ,"description" : ""
             ,"strenght": 5
             ,"damage": 1
-            ,"objs": []
+            ,"inventory": []
         }
         ,{
             "name": "mercante"
+            ,"description" : ""
             ,"strenght": 1
             ,"damage": 0
-            ,"objs": ["gold cup"
+            ,"inventory": ["gold cup"
                 ,"red key"]
         }
     ]

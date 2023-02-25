@@ -1,37 +1,37 @@
 {
-    "map": [
-        [
-            {
-                "name": "Deserto rosso"
-                ,"type": "deserto"
-                ,"chars": [
-                    {
-                        "name":"Dragone rosso"
-                        ,"type": "dragone"
-                    }
-                ]
-            }
-            ,{
-                "name": "Lago bagnato"
-                ,"type": "lago"
-                ,"chars": []
-            }
-        ]
-        ,[
-            {
-                "name": "Deserto rosso"
-                ,"type": "deserto"
-            }
-            ,{
-                "name": "Borgo allegro"
-                ,"type": "borgo"
-                ,"chars": [
-                    {
-                        "name": "Pinuzz' 'o mariuolo"
-                        ,"type": "mercante"
-                    }
-                ]
-            }
-        ]
+    "maxdim": [3,3]
+    ,"map": [
+        {
+            "name": "Deserto rosso"
+            ,"pos": [0,1]
+            ,"description": "C'è un sacco di sabbia intorno a te"
+            ,"bonusmalus": -1
+            ,"inventory": [
+                "Dragone rosso"
+            ]
+        }
+        ,{
+            "name": "Lago bagnato"
+            ,"pos": [0,2]
+            ,"description": "C'è un sacco di acqua davanti a te"
+            ,"bonusmalus": 0
+            ,"inventory": []
+        }
+        ,{
+            "name": "Deserto rosso"
+            ,"pos": [1,1]
+            ,"description": "C'è un sacco di sabbia intorno a te"
+            ,"bonusmalus": -1
+            ,"inventory": []
+        }
+        ,{
+            "name": "Borgo allegro"
+            ,"pos": [1,2]
+            ,"description": "C'è un sacco di case intorno a te"
+            ,"bonusmalus": 0
+            ,"inventory": [
+                "Pinuzz' 'o mariuolo"
+            ]
+        }
     ]
 }

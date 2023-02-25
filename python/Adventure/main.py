@@ -26,13 +26,8 @@
 import json
 
 
-class mappa:
-    def __init__(self):
-        pass
-
-
 # Classe gioco
-class gioco:
+class game:
 
     def __init__(self):
         """
@@ -40,6 +35,8 @@ class gioco:
         """
         # - lettura definizione di ambienti, personaggi (contenuti in ambienti) e oggetti (contenuti in ambienti e oggetti)
         personaggi_tmp = self.loadjson('chars.json')
+        for
+
         luoghi_tmp = self.loadjson("rooms.json")
         mappa_tmp = self.loadjson("map.json")
 
@@ -48,6 +45,9 @@ class gioco:
 
 
     def loadjson(self,file):
+        """
+        funzione comune per la lettura dei file di configurazione json
+        """
         with open(file,'r') as fp:
             riga = fp.read()
             codice = str("").join([riga])
@@ -59,7 +59,7 @@ class gioco:
         # - impostazione e posizionamento dell'eroe
 
 
-    def gioca(self):
+    def play(self):
         """
         singolo passo del gioco
         """
@@ -125,7 +125,7 @@ class gioco:
 
 def main(args):
 
-    partita = gioco()
+    partita = game()
 
 # Schema base del ciclo
 # 1. descrizione ambiente
