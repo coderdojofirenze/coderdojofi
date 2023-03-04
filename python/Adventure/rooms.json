@@ -1,5 +1,5 @@
 {
-    "rooms": [
+    "roomtypes": [
         {
             "name": "deserto"
             ,"description": "C'è un sacco di sabbia intorno a te"

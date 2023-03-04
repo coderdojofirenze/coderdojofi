@@ -23,11 +23,16 @@
 #
 
 
+import copy
+
+
 class gameMap:
 
     #map: array bidimensionale dei luoghi posizionati sulla mappa
 
     def __init__(self,max_x,max_y):
+        self.max_x = max_x
+        self.max_y = max_y
         self.map = [[None]*max_x for i in range(max_y)]
         #TODO: altro da fare?
 
@@ -42,7 +47,7 @@ class gameMap:
         nessun valore di ritorno - per ora
         """
 
-        self.map[x][y] = c_type.copy()
+        self.map[x][y] = c_type
         #TODO: impostazioni succesive del luogo
 
 
@@ -50,7 +55,30 @@ class gameMap:
         """
         Restituisce il luogo indicato alle coordinate
         """
+        if self.map[x][y] == None:
+            return False
         return self.map[x][y]
+
+
+    # solo per debug
+    def printMap(self):
+        for x in range(0,self.max_x):
+            for y in range(0,self.max_y):
+                if self.getCell(x,y) == False:
+                    desc_tot = "Cella vuota"
+                else:
+                    characters = []
+                    things = []
+                    desc = self.getCell(x,y).getDescription()
+                    for singlech in self.getCell(x,y).getCluster():
+                        characters = singlech.getDescription()
+
+                    for singleth in self.getCell(x,y).getInventory():
+                        things = singleth.getDescription()
+
+                    desc_tot = str("").join([desc,characters,things])
+                print("({},{}): {}\n".format(x,y,desc_tot))
+        return True
 
 
 class mapObject:
@@ -128,23 +156,26 @@ class mapObject:
 class room(mapObject):
     #bonusmalus: effetti sul giocatore
 
-    def __init__(self,name,description):
-        mapObject.__init__(self,name,description)
+    def __init__(self,name,desc):
+        mapObject.__init__(self,name,desc)
         self.bonusmalus = 0
 
 
     def setBM(self,value):
         self.bonusmalus = value
-        return self.get_BM()
+        return self.getBM()
 
 
     def getBM(self):
         return self.bonusmalus
 
 
-    def foo(self,pippo):
-        print(pippo)
+    def getCluster(self):
+        return self.cluster
 
+
+    def getInventory(self):
+        return self.inventory
 
 
 class character(mapObject):
@@ -156,12 +187,14 @@ class character(mapObject):
 
 
     # costruttore
-    def __init__(self):
+    def __init__(self,name,desc):
         """
         costruttore - per ora posizionamento sulla mappa
 
-        posx,posy (int): coordinate della casella
+
         """
+
+        mapObject.__init__(name,desc)
 
         #TODO: ctrl valori accettabili (dentro la mappa)
         # posiziona il personaggio alla casella posx,posy
@@ -171,6 +204,11 @@ class character(mapObject):
         self.strenght = 1 # varierà in base al personaggio?
         self.damage = 1 # varierà in base al personaggio?
         self.inventory = []
+
+
+    def getThings(self):
+        #TODO: ispirati a test_json
+        pass
 
 
     def setThings(th_list):
@@ -209,34 +247,6 @@ class thing(mapObject):
             self.description = desc
 
 
-    def setAttr(self,desc,cost,hlt):
-        """
-        imposta uno o più parametri caratteristici dell'oggetto
-        desc (str):
-        cost (int):
-        hlt (int):
-
-        restituisce:
-            (int/str): nuova gamma valori impostata
-        """
-        if description != "":
-            self.description = description
-        if cost > 0:
-            self.cost = cost
-        if dmg > 0:
-            self.damage = damage
-        if hlt > 0:
-            self.health = hlt
-
-        ret = {
-            "desc": self.description
-            ,"cost": self.cost
-            ,"dmg": self.damage
-            ,"hlt": self.healt
-        }
-        return ret.copy
-
-
     def getCost(self):
         """
         costo dell'oggetto - se in vendita presso un mercante
@@ -244,18 +254,27 @@ class thing(mapObject):
         return self.cost
 
 
+    def setCost(self,cost):
+        """
+        setta costo dell'oggetto - se in vendita presso un mercante
+        """
+        self.cost = cost
+        return self.cost
+
+
     def getDamage(self):
         """
-        capacità di danno se usato
+        capacità di danno/cura se usato
         """
         return self.damage
 
 
-    def getHealth(self):
+    def setDamage(self,dmg):
         """
-        capacità di cura se usato
+        setta capacità di danno/cura se usato
         """
-        return self.health
+        self.damage = dmg
+        return self.damage
 
 
 def main(args):

@@ -6,8 +6,11 @@
             ,"pos": [0,1]
             ,"description": "C'è un sacco di sabbia intorno a te"
             ,"bonusmalus": -1
+            ,"cluster": [
+                "Kalibert, dragone rosso"
+            ]
             ,"inventory": [
-                "Dragone rosso"
+                "chiave rossa"
             ]
         }
         ,{
@@ -15,6 +18,7 @@
             ,"pos": [0,2]
             ,"description": "C'è un sacco di acqua davanti a te"
             ,"bonusmalus": 0
+            ,"cluster": []
             ,"inventory": []
         }
         ,{
@@ -22,6 +26,7 @@
             ,"pos": [1,1]
             ,"description": "C'è un sacco di sabbia intorno a te"
             ,"bonusmalus": -1
+            ,"cluster": []
             ,"inventory": []
         }
         ,{
@@ -29,9 +34,10 @@
             ,"pos": [1,2]
             ,"description": "C'è un sacco di case intorno a te"
             ,"bonusmalus": 0
-            ,"inventory": [
+            ,"cluster": [
                 "Pinuzz' 'o mariuolo"
             ]
+            ,"inventory": []
         }
     ]
 }
