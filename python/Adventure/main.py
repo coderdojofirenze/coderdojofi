@@ -23,28 +23,47 @@
 #
 
 
-import json
+import os,json
+from classiBase import gameMap,mapObject,room,character,thing
 
 
 # Classe gioco
 class game:
 
-    def __init__(self):
+    def __init__(self,json_ch,json_map):
         """
         inizializzazione del gioco attraverso lettura del file JSON
-        """
-        # - lettura definizione di ambienti, personaggi (contenuti in ambienti) e oggetti (contenuti in ambienti e oggetti)
-        personaggi_tmp = self.loadjson('chars.json')
-        for
 
-        luoghi_tmp = self.loadjson("rooms.json")
-        mappa_tmp = self.loadjson("map.json")
+        json_ch (str): path e nome del file json per personaggi e oggetti
+        json_map (str): path e nome del file json per luoghi
+        """
+
+        if not os.path.exists(json_ch):
+            #TODO: mesg errore
+            return False
+        if not os.path.exists(json_map):
+            #TODO: mesg errore
+            return False
+
+        # oggetto temporaneo personaggi (chars.json) e oggetti (map.json)
+        cod_p = self.loadJSON(json_ch)
+
+        # oggetto temporaneo luoghi mappa
+        cod_m = self.loadJSON(json_map)
+
+        # inizializzazione mappa e personaggi
+        self.gameMap = gameMap(cod_p,cod_m)
+
+        # lettura definizione di ambienti, personaggi (contenuti in ambienti) e oggetti (contenuti in ambienti e oggetti)
+        #personaggi_tmp = self.loadjson('chars.json')
+        #luoghi_tmp = self.loadjson("rooms.json")
+        #mappa_tmp = self.loadjson("map.json")
 
         #TODO: creare oggetto mappa e usarne i metodi per popolarla ()
         #print("personaggio: {}".format(personaggi_tmp["characters"][1]))
 
 
-    def loadjson(self,file):
+    def loadJSON(self,file):
         """
         funzione comune per la lettura dei file di configurazione json
         """
@@ -127,12 +146,12 @@ def main(args):
 
     partita = game()
 
-# Schema base del ciclo
-# 1. descrizione ambiente
-#   1a. lettura descrizione da
-# 2. descrizione personaggi
-# 3. lettura e interpretazione azione
-# 4. conseguenze
+    # Schema base del ciclo
+    # 1. descrizione ambiente
+    #   1a. lettura descrizione da
+    # 2. descrizione personaggi
+    # 3. lettura e interpretazione azione
+    # 4. conseguenze
 
     return 0
 
