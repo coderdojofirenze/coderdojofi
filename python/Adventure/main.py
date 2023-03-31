@@ -51,17 +51,15 @@ class game:
         # oggetto temporaneo luoghi mappa
         cod_m = self.loadJSON(json_map)
 
-        # inizializzazione mappa e personaggi
+        # inizializzazione mappa, personaggi e oggetti
         self.gameMap = gameMap(cod_p,cod_m)
 
-        # lettura definizione di ambienti, personaggi (contenuti in ambienti) e oggetti (contenuti in ambienti e oggetti)
-        #personaggi_tmp = self.loadjson('chars.json')
-        #luoghi_tmp = self.loadjson("rooms.json")
-        #mappa_tmp = self.loadjson("map.json")
+        # inizializza eroe come oggetto character
+        self.hero = character("eroe","Protagonista del gioco")
+        #TODO: impostare vitalità e oggetti base (anche nulla in realtà...)
 
-        #TODO: creare oggetto mappa e usarne i metodi per popolarla ()
-        #print("personaggio: {}".format(personaggi_tmp["characters"][1]))
-
+        #TODO: metodi di intervento sull'eroe
+        
 
     def loadJSON(self,file):
         """
@@ -73,21 +71,27 @@ class game:
         return json.loads(codice)
 
 
-        #TODO:
-        # - impostazione della mappa (ambienti alle coordinate richieste)
-        # - impostazione e posizionamento dell'eroe
-
-
     def play(self):
         """
         singolo passo del gioco
         """
-        #TODO
         # in base alla posizione del giocatore:
+        actualCell = self.gameMap.getHeroCell()
         # 0. mostra descrizione del luogo - a meno che la posizione non sia mancata dal passo precedente
+        room_desc = actualCell.descRoom()
+        out = str("\n\n").join([room_desc["desc"]
+            ,str("\n").join(room_desc["chars"])
+            ,str("\n").join("- Oggetti presenti: ",room_desc["things"])
+        ])
+        print("{}".format(out))
+        
+        #TODO
         # 1. se il luogo influisce sulla salute (es. deserto, fontana curativa), somma/togli punti
+        if actualCell.getBM() != 0:
+            None
         # 2. se è presente un personaggio aggressivo (es. drago), effettua il suo attacco
-        # 3. leggi il comando del personaggio ed esegui di conseguenza
+        # 3. segnala le direzioni disponibili
+        # 4. leggi il comando del personaggio ed esegui di conseguenza
         pass
 
 
@@ -144,7 +148,7 @@ class game:
 
 def main(args):
 
-    partita = game()
+    partita = game('chars.json','map.json')
 
     # Schema base del ciclo
     # 1. descrizione ambiente

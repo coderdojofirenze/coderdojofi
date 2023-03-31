@@ -81,7 +81,6 @@ class gameMap:
         #TODO: CICLO GIOCO
 
 
-
     def mapDim(self,max_x,max_y):
         """
         dimensionamento della mappa
@@ -205,6 +204,36 @@ class gameMap:
         return self.map[x][y]
 
 
+    def cellDirs(self,x,y):
+        """
+        Restituisce le direzioni possibili dalla cella indicata tramite coordinate
+        ([str])
+        """
+        out = []
+        if x < 0 or x >= self.map_x:
+            return False
+        if y < 0 or y >= self.map_y:
+            return False
+        if self.map[x][y] == None:
+            return False
+
+        for tx in range(-1,3,2):
+            if self.map[x+tx][y] != None:
+                if tx < 0:
+                    out.append("E")
+                else:
+                    out.append("O")
+
+        for ty in range(-1,3,2):
+            if self.map[x][y+ty] != None:
+                if ty < 0:
+                    out.append("S")
+                else:
+                    out.append("N")
+
+        return out
+
+
     def setPosHero(self,x,y):
         """
         riposiziona l'eroe sulla mappa
@@ -221,6 +250,20 @@ class gameMap:
         restituisce la posizione [x,y] dell'eroe sulla mappa
         """
         return self.current
+
+
+    def getDirections(self):
+        """
+        in base alla posizione segnala le possibili direzioni (uscite dalla cella)
+        """
+        pass
+
+
+    def getHeroCell(self):
+        """
+        restituisce l'attuale luogo dell'eroe
+        """
+        return self.getCell(self.current[0],self.current[1])
 
 
     # solo per debug
@@ -355,18 +398,21 @@ class room(mapObject):
 
     def descRoom(self):
         """
-        descrizione di personaggi e oggetti nella stanza
+        restituisce descrizione di personaggi e oggetti nella stanza
+        {"desc": str, "chars": str, "things": str}
         """
+
         chars_desc = []
-        things_desc = []
         for singlech in self.getCluster():
             chars_desc.append(singlech.getDesc())
 
+        things_desc = []
         for singleth in self.getCell(x,y).getInventory():
             things_desc.append(singleth.getDesc())
 
-        desc_tot = str("\n\n").join([self.description
-            ,str("\n").join(chars_desc),str("\n").join(things_desc)])
+        out = {"desc": self.description
+            ,"chars": str("\n").join(chars_desc)
+            ,"things": str("\n").join(things_desc)}
 
 
 # ============================================================================
