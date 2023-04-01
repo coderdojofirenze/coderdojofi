@@ -23,23 +23,26 @@
             ,"damage": -1
             ,"cost": 1
         }
-        ,"t2" :{
+        ,"t2": {
             "name": "chiave verde"
             ,"description": "una chiave color smeraldo"
             ,"damage": 0
             ,"cost": 1
         }
-        ,"t3" :{
+        ,"t3": {
             "name": "spada"
             ,"description": "una spada con l'impugnatura a due mani"
             ,"damage": 1
             ,"cost": 1
         }
-        ,"t4" :{
+        ,"t4": {
             "name": "chiave rossa"
             ,"description": "una chiave color rubino"
             ,"damage": 0
             ,"cost": 1
         }
     }
+    ,"heroInventory": [
+        
+    ]
 }

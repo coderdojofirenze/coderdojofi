@@ -55,11 +55,20 @@ class game:
         self.gameMap = gameMap(cod_p,cod_m)
 
         # inizializza eroe come oggetto character
-        self.hero = character("eroe","Protagonista del gioco")
         #TODO: impostare vitalità e oggetti base (anche nulla in realtà...)
+        self.hero = character("eroe","Protagonista del gioco")
+        self.hero.setStrenght(5)
 
-        #TODO: metodi di intervento sull'eroe
-        
+        # estrazione oggetti come dotazione di partenza
+        #for th in cod_m["heroInventory"]: #prendi oggetti in lista (nomi che riferiscono oggetti - come oggetti in stanza)
+        #self.hero.setThings(self.heroThings(cod_m))
+        #TODO: pensare a eventuali oggetti
+
+        end = False
+        while end != True:
+            end = self.play()
+        print("Fine del gioco")
+
 
     def loadJSON(self,file):
         """
@@ -77,11 +86,17 @@ class game:
         """
         # in base alla posizione del giocatore:
         actualCell = self.gameMap.getHeroCell()
+
+        #debug
+        #print("game.play(): cella attuale: {}".format(actualCell.descRoom()))
+
+        ret = False
+
         # 0. mostra descrizione del luogo - a meno che la posizione non sia mancata dal passo precedente
         room_desc = actualCell.descRoom()
         out = str("\n\n").join([room_desc["desc"]
             ,str("\n").join(room_desc["chars"])
-            ,str("\n").join("- Oggetti presenti: ",room_desc["things"])
+            ,str("\n").join(["- Oggetti presenti: ",room_desc["things"]])
         ])
         print("{}".format(out))
         
@@ -92,7 +107,14 @@ class game:
         # 2. se è presente un personaggio aggressivo (es. drago), effettua il suo attacco
         # 3. segnala le direzioni disponibili
         # 4. leggi il comando del personaggio ed esegui di conseguenza
-        pass
+
+        cmd = input("Comando: ")
+        ret = self.parse(cmd)
+
+        if cmd == "exit":
+            ret = True
+
+        return ret
 
 
     def parse(self,cmd):
@@ -125,7 +147,9 @@ class game:
             #TODO: lista azioni
             if parts[0] in ["n","s","e","o"]:
                 # TODO: spostati se c'è un ambiente raggiungibile
-                pass
+                ret = self.moveHero(parts[0])
+                if ret == False:
+                    print("Non puoi andare di là!")
             elif parts[0] == "usa":
                 # TODO: usa oggetto parts[1] se è nell'inventario
                 pass
@@ -143,6 +167,37 @@ class game:
                 pass
         else:
             print("comando sconosciuto: {}".format(cmd))
+            return False
+
+
+    def heroThings(self,cod_m):
+        """
+        cod_m (obj): struttura JSON caricata in partenza con indicazioni oggetti
+        """
+        pass
+
+
+    def moveHero(self,dr):
+        """
+        df (str): direzione n,s,e,o
+        """
+        pos = self.gameMap.getPosHero()
+
+        if dr == "n":
+            pos[1] += 1
+        elif dr == "s":
+            pos[1] -= 1
+        elif dr == "e":
+            pos[0] -= 1
+        elif dr == "o":
+            pos[0] += 1
+        else:
+            return False
+
+        if(self.gameMap.getCell(pos[0],pos[1]) != False):
+            self.gameMap.setPosHero(pos[0],pos[1])
+            return True
+        else:
             return False
 
 

@@ -40,7 +40,7 @@ class gameMap:
         """
         costruttore - inizializzazione del gioco
         (qui il codice di testJson.py)
-        # TODO: sèpostare lettura files fuori, su main.py (classe game)
+        # TODO: spostare lettura files fuori, su main.py (classe game)
 
         cod_p (str): oggetto JSON di descrizione personaggi e oggetti
         cod_m (str): oggetto JSON di descrizione luoghi
@@ -49,6 +49,7 @@ class gameMap:
         self.map_x = 0
         self.map_y = 0
         self.map = []
+        self.current = [0,0]
 
         # interpretazione personaggi e oggetti
         self.loadThings(cod_p)
@@ -74,8 +75,8 @@ class gameMap:
             self.setPosHero(x,y)
 
         #TODO: eliminare appena pronti
-        print("gameMap.mapDim - struttura mappa:")
-        self.printMap()
+        #print("gameMap.mapDim - struttura mappa:")
+        #self.printMap()
 
         #TODO: verifica se serve altro
         #TODO: CICLO GIOCO
@@ -407,12 +408,14 @@ class room(mapObject):
             chars_desc.append(singlech.getDesc())
 
         things_desc = []
-        for singleth in self.getCell(x,y).getInventory():
+        for singleth in self.getInventory():
             things_desc.append(singleth.getDesc())
 
         out = {"desc": self.description
             ,"chars": str("\n").join(chars_desc)
             ,"things": str("\n").join(things_desc)}
+
+        return out
 
 
 # ============================================================================
