@@ -111,17 +111,28 @@ class gameMap:
 
         TODO: restituire errore in caso di problemi
         """
-        oggetti = {}
+        obj_dict = {}
         for obj in elements["things"]:
-            oggetto = thing(
+            obj_single = thing(
                 name = elements["things"][obj]["name"]
                 ,desc = elements["things"][obj]["description"]
             )
-            oggetto.setDamage(elements["things"][obj]["damage"])
-            oggetto.setCost(elements["things"][obj]["damage"])
-            oggetti[elements["things"][obj]["name"]] = deepcopy(oggetto)
-        self.things = oggetti
+            obj_single.setDamage(elements["things"][obj]["damage"])
+            obj_single.setCost(elements["things"][obj]["damage"])
+            obj_dict[elements["things"][obj]["name"]] = deepcopy(obj_single)
+        self.things = obj_dict
 
+
+    def getThing(name):
+        """
+        restituisce l'oggetto con il nome indicato - False se non è previsto
+        name(str): nome dell'oggetto richiesto
+        """
+        if name in self.things:
+            return self.things[name]
+        else:
+            return False
+            
 
     def loadChars(self,elements):
         """
@@ -131,17 +142,17 @@ class gameMap:
 
         TODO: restituire errore in caso di problemi
         """
-        #personaggi = elements["characters"]
-        personaggi = {}
+        #char_list = elements["characters"]
+        char_list = {}
         for singlech in elements["characters"]:
             #debug
             #print("{} - {}".format(elements["characters"][singlech]["name"],elements["characters"][singlech]["description"]))
-            personaggio = character(
-                name=elements["characters"][singlech]["name"]
-                ,desc=elements["characters"][singlech]["description"]
+            char_obj = character(
+                name = elements["characters"][singlech]["name"]
+                ,desc = elements["characters"][singlech]["description"]
             )
-            personaggio.setStrenght(elements["characters"][singlech]["strenght"])
-            personaggio.setDamage(elements["characters"][singlech]["damage"])
+            char_obj.setStrenght(elements["characters"][singlech]["strenght"])
+            char_obj.setDamage(elements["characters"][singlech]["damage"])
 
             if "inventory" in elements["characters"][singlech] \
                 and len(elements["characters"][singlech]["inventory"]) > 0:
@@ -149,11 +160,22 @@ class gameMap:
                 inventario = {}
                 for oggetto in elements["characters"][singlech]["inventory"]:
                     inventario[oggetto] = deepcopy(self.things[oggetto])
-                personaggio.setThings(inventario)
+                char_obj.setThings(inventario)
 
-            personaggi[elements["characters"][singlech]["name"]] = deepcopy(personaggio)
-        self.characters = personaggi
+            char_list[elements["characters"][singlech]["name"]] = deepcopy(char_obj)
+        self.characters = char_list
 
+
+    def getChar(name):
+        """
+        restituisce il personaggio con il nome indicato - False se non è previsto
+        name(str): nome dell'oggetto richiesto
+        """
+        if name in self.characters:
+            return self.characters[name]
+        else:
+            return False
+            
 
     def loadRooms(self,luoghi):
         for stanza in luoghi["map"]:
@@ -221,16 +243,16 @@ class gameMap:
         for tx in range(-1,3,2):
             if self.map[x+tx][y] != None:
                 if tx < 0:
-                    out.append("E")
+                    out.append("e")
                 else:
-                    out.append("O")
+                    out.append("o")
 
         for ty in range(-1,3,2):
             if self.map[x][y+ty] != None:
                 if ty < 0:
-                    out.append("S")
+                    out.append("s")
                 else:
-                    out.append("N")
+                    out.append("n")
 
         return out
 
@@ -250,7 +272,7 @@ class gameMap:
         """
         restituisce la posizione [x,y] dell'eroe sulla mappa
         """
-        return self.current
+        return deepcopy(self.current)
 
 
     def getDirections(self):
@@ -355,7 +377,6 @@ class mapObject:
         restituisce:
         (int,int): posizione aggiornata
 
-
         N.B: al momento impossibile giudicare se dentro ai confini della mappa
         (a meno di non passare un oggetto map...)
         """
@@ -365,6 +386,14 @@ class mapObject:
         if int(y) > 0:
             self.y = int(y)
         return self.getPos()
+
+
+    def descObj(self):
+        """
+        restituisce nome e descrizione dell'oggetto ben formattati
+        """
+        return str(": ").join([self.name,self.description])
+
 
 
 # ============================================================================
@@ -405,11 +434,11 @@ class room(mapObject):
 
         chars_desc = []
         for singlech in self.getCluster():
-            chars_desc.append(singlech.getDesc())
+            chars_desc.append(singlech.descObj())
 
         things_desc = []
         for singleth in self.getInventory():
-            things_desc.append(singleth.getDesc())
+            things_desc.append(singleth.descObj())
 
         out = {"desc": self.description
             ,"chars": str("\n").join(chars_desc)
@@ -486,7 +515,7 @@ class character(mapObject):
         #TODO
         if isinstance(th,thing):
             self.inventory.append(th)
-            return self.inventory()
+            return self.inventory
 
 
     def subThing(self,tname):
@@ -545,8 +574,16 @@ class character(mapObject):
         """
         return self.damage
 
-    #TODO: altri metodi (assegna danno all'eroe, accumula danno dall'eroe, vendi oggetto all'eroe)
 
+    def descChar(self):
+        """
+        restituisce nome e descrizione del personaggio ben formattati
+        """
+        
+        return str(": ").join([self.name,self.description])
+
+    #TODO: altri metodi (assegna danno all'eroe, accumula danno dall'eroe, vendi oggetto all'eroe)
+    
 
 # ============================================================================
 # =====                                                                  =====
@@ -605,6 +642,7 @@ class thing(mapObject):
 
 def main(args):
     return 0
+
 
 if __name__ == '__main__':
     import sys

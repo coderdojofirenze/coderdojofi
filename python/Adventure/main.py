@@ -24,6 +24,7 @@
 
 
 import os,json
+from copy import deepcopy
 from classiBase import gameMap,mapObject,room,character,thing
 
 
@@ -60,13 +61,14 @@ class game:
         self.hero.setStrenght(5)
 
         # estrazione oggetti come dotazione di partenza
-        #for th in cod_m["heroInventory"]: #prendi oggetti in lista (nomi che riferiscono oggetti - come oggetti in stanza)
-        #self.hero.setThings(self.heroThings(cod_m))
-        #TODO: pensare a eventuali oggetti
+        for th_name in cod_p["heroInventory"]: #prendi oggetti in lista (nomi che riferiscono oggetti - come oggetti in stanza)
+            if th_name in self.gameMap.things:
+                self.hero.addThing(deepcopy(self.gameMap.things[th_name]))
 
         end = False
         while end != True:
             end = self.play()
+            #TODO: eventuali operazioni aggiuntive di contorno al gioco
         print("Fine del gioco")
 
 
@@ -88,14 +90,14 @@ class game:
         actualCell = self.gameMap.getHeroCell()
 
         #debug
-        #print("game.play(): cella attuale: {}".format(actualCell.descRoom()))
+        print("game.play(): pos attuale: {}".format(self.gameMap.getPosHero()))
 
         ret = False
 
         # 0. mostra descrizione del luogo - a meno che la posizione non sia mancata dal passo precedente
         room_desc = actualCell.descRoom()
         out = str("\n\n").join([room_desc["desc"]
-            ,str("\n").join(room_desc["chars"])
+            ,str("\n").join(["",room_desc["chars"]])
             ,str("\n").join(["- Oggetti presenti: ",room_desc["things"]])
         ])
         print("{}".format(out))
@@ -110,10 +112,6 @@ class game:
 
         cmd = input("Comando: ")
         ret = self.parse(cmd)
-
-        if cmd == "exit":
-            ret = True
-
         return ret
 
 
@@ -134,10 +132,10 @@ class game:
 
         verbs = [
             "n","s","e","o" # direzioni
-            ,"usa","prendi" # azioni con oggetti
-            ,"inventario" # lista oggetti posseduti
-            ,"salute" # condizioni
-            ,"esci"
+            ,"usa","prendi","lascia","acquista" # azioni con oggetti (1,2 argomenti)
+            ,"attacca","parla con" # azioni con personaggi (1 argomento)
+            ,"inventario","inv","salute" # richiesta condizioni eroe (senza argomenti)
+            ,"esci" # ,"salva","carica" # comandi del gioco (0,1 argomenti)
         ]
 
         parts = cmd.split(" ")
@@ -156,25 +154,31 @@ class game:
             elif parts[0] == "prendi":
                 # TODO: prendi oggetto parts[1] dall'ambiente se c'è
                 pass
-            elif parts[0] == "inventario":
+            elif parts[0] in ["inventario","inv"]:
                 # TODO: lista oggetti nell'inventario
-                pass
+                print("Questo è quello che possiedi:")
+                for th in self.hero.inventory:
+                    print("{}".format(th.descObj()))
             elif parts[0] == "salute":
-                # TODO: mostra livello energetico
-                pass
-            elif parts[0] == "esci":
+                print("Il tuo livello di salute è {}".format(self.hero.getStrenght()))
+            elif parts[0] in ["esci","exit","x"]:
                 # TODO: avvia procedura di uscita dal gioco
-                pass
+                return True
+            print(" ---\n")
         else:
-            print("comando sconosciuto: {}".format(cmd))
+            print("comando sconosciuto: {}\n ---\n".format(cmd))
             return False
 
 
-    def heroThings(self,cod_m):
+    def loadHero(self,cod_m):
         """
         cod_m (obj): struttura JSON caricata in partenza con indicazioni oggetti
         """
-        pass
+        hero_things = {}
+        for obj_name in elements["heroInventory"]:
+            if obj_name in self.map.things:
+                hero_things[obj_name] = deepcopy(self.map.getThing(obj_name))
+        self.hero.setThings(hero_things)
 
 
     def moveHero(self,dr):
