@@ -334,6 +334,7 @@ class mapObject:
             self.description = desc
         self.x = x
         self.y = y
+        self.inventory = []
 
 
     def getName(self):
@@ -388,6 +389,25 @@ class mapObject:
         return self.getPos()
 
 
+    def getInventory(self):
+        return self.inventory
+
+
+    def inInventory(self,name):
+        """
+        risponde True se l'oggetto esiste nell'inventario
+
+        name(str): nome dell'oggetto da cercare
+        """
+        if len(self.inventory) <= 0:
+            return False
+        objnames = [obj.getName() for obj in self.inventory]
+        if name in objnames:
+            return True
+        else:
+            return False
+
+
     def descObj(self):
         """
         restituisce nome e descrizione dell'oggetto ben formattati
@@ -420,10 +440,6 @@ class room(mapObject):
 
     def getCluster(self):
         return self.cluster
-
-
-    def getInventory(self):
-        return self.inventory
 
 
     def descRoom(self):
@@ -475,15 +491,6 @@ class character(mapObject):
         # cosa altro fare?
         self.strenght = 1 # varierà in base al personaggio?
         self.damage = 1 # varierà in base al personaggio?
-        self.inventory = []
-
-
-    def Inventory(self):
-        """
-        restituisce la lista oggetti posseduta
-        """
-        #TODO: ispirati a test_json
-        return self.inventory
 
 
     def setThings(self,th_list):

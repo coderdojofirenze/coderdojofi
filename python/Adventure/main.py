@@ -87,7 +87,7 @@ class game:
         singolo passo del gioco
         """
         # in base alla posizione del giocatore:
-        actualCell = self.gameMap.getHeroCell()
+        actual_cell = self.gameMap.getHeroCell()
 
         #debug
         print("game.play(): pos attuale: {}".format(self.gameMap.getPosHero()))
@@ -95,7 +95,7 @@ class game:
         ret = False
 
         # 0. mostra descrizione del luogo - a meno che la posizione non sia mancata dal passo precedente
-        room_desc = actualCell.descRoom()
+        room_desc = actual_cell.descRoom()
         out = str("\n\n").join([room_desc["desc"]
             ,str("\n").join(["",room_desc["chars"]])
             ,str("\n").join(["- Oggetti presenti: ",room_desc["things"]])
@@ -104,22 +104,23 @@ class game:
         
         #TODO
         # 1. se il luogo influisce sulla salute (es. deserto, fontana curativa), somma/togli punti
-        if actualCell.getBM() != 0:
+        if actual_cell.getBM() != 0:
             None
         # 2. se è presente un personaggio aggressivo (es. drago), effettua il suo attacco
         # 3. segnala le direzioni disponibili
         # 4. leggi il comando del personaggio ed esegui di conseguenza
 
         cmd = input("Comando: ")
-        ret = self.parse(cmd)
+        ret = self.parse(cmd,actual_cell)
         return ret
 
 
-    def parse(self,cmd):
+    def parse(self,cmd,cell):
         """
         parse() - interpreta comando
 
-        stringa(str): comando da interpretare
+        cmd(str): comando da interpretare
+        cell(obj): cella attuale
 
         restituisce
             True: comando compreso
@@ -131,11 +132,11 @@ class game:
             return False
 
         verbs = [
-            "n","s","e","o" # direzioni
-            ,"usa","prendi","lascia","acquista" # azioni con oggetti (1,2 argomenti)
-            ,"attacca","parla con" # azioni con personaggi (1 argomento)
-            ,"inventario","inv","salute" # richiesta condizioni eroe (senza argomenti)
-            ,"esci" # ,"salva","carica" # comandi del gioco (0,1 argomenti)
+            "n","s","e","o" # direzioni (1 parola)
+            ,"usa","prendi","lascia","acquista" # azioni con oggetti (1,2 parole)
+            ,"attacca","parla_con" # azioni con personaggi (1 parola)
+            ,"inventario","inv","salute" # richiesta condizioni eroe (senza parole)
+            ,"esci" # ,"salva","carica" # comandi del gioco (0,1 parole)
         ]
 
         parts = cmd.split(" ")
@@ -152,11 +153,16 @@ class game:
                 # TODO: usa oggetto parts[1] se è nell'inventario
                 pass
             elif parts[0] == "prendi":
-                # TODO: prendi oggetto parts[1] dall'ambiente se c'è
-                pass
+                if cell.inInventory(parts[1]) == False:
+                    print("Non trovo {}!".format(parts[1]))
+                else:
+                    print("DEBUG: implementare codice")
+                    # TODO: prendi oggetto parts[1] dall'ambiente
+                    pass
             elif parts[0] in ["inventario","inv"]:
                 # TODO: lista oggetti nell'inventario
                 print("Questo è quello che possiedi:")
+                #TODO: sfruttare getInventory() della classe mapObject
                 for th in self.hero.inventory:
                     print("{}".format(th.descObj()))
             elif parts[0] == "salute":

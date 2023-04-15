@@ -1,5 +1,6 @@
 {
     "maxdim": [3,3]
+    ,"start": [1,1]
     ,"map": [
         {
             "name": "Deserto rosso"
@@ -10,7 +11,7 @@
                 "Kalibert, dragone rosso"
             ]
             ,"inventory": [
-                "chiave rossa"
+                "chiave_rossa"
             ]
         }
         ,{
@@ -37,7 +38,9 @@
             ,"cluster": [
                 "Pinuzz' 'o mariuolo"
             ]
-            ,"inventory": []
+            ,"inventory": [
+                "chiave_verde"
+            ]
         }
     ]
 }
